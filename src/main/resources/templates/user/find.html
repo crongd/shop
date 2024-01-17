@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIND ID/PW | KOREAIT</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        --text-normal-size: 20px;
+        --text-large-size: 25px;
+        --text-xlarge-size: 30px;
+        --text-small-size: 15px;
+        --text-xsmall-size: 13px;
+        --text-medium-size: 17px;
+        --search-width: 90vw;
+
+
+        --deep-dark-color: #595959;
+        --dark-color: #A6A6A6;
+        --brigth-color: #D9D9D9;
+        --light-color: #F2F2F2;
+        --black-color: #0D0D0D;
+
+
+        box-sizing: border-box;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+
+    main{
+        width: 50vw;
+        margin: 0 auto;
+    }
+
+    section{
+        border: 2px solid black;
+        border-radius: 6px;
+        margin: 30px 0;
+    }
+
+    section > span{
+        display: block;
+        padding: 15px 20px;
+        border-bottom: 2px solid black;
+        font-size: var(--text-xlarge-size);
+        font-weight: bold;
+        background-color: aliceblue;
+    }
+
+    .find-div{
+        padding: 5px 20px;
+    }
+
+    .find-title{
+        display: block;
+        margin: 15px 0;
+        font-size: var(--text-normal-size);
+        font-weight: bold;
+        color: rgba(0,0,0,0.7);
+    }
+
+    input{
+        display: block;
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid black;
+        font-size: var(--text-normal-size);
+    }
+
+    /* number button remove */
+    input::-webkit-inner-spin-button {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    input[type=email]{
+        border-top: none;
+    }
+
+    button{
+        width: 100%;
+        display: block;
+        margin: 20px 0;
+        padding: 10px 20px;
+        font-size: var(--text-normal-size);
+        font-weight: bold;
+        color: white;
+        background-color: cornflowerblue;
+        cursor: pointer;
+    }
+    button:hover{
+        opacity: 0.9;
+    }
+
+</style>
+<body>
+    <main>
+        <section>
+            <span>아이디 찾기</span>
+
+            <div class="find-div">
+                <span class="find-title">휴대폰으로 찾기</span>
+                <label><input type="text" placeholder="휴대폰 번호" maxlength="13" id="phoneNum"></label>
+                <button type="button" id="find-id">휴대폰에 전송하기</button>
+            </div>
+
+        </section>
+
+        <section>
+            <span>비밀번호 재설정</span>
+
+            <div class="find-div">
+                <span class="find-title">이메일로 재설정</span>
+                <input type="hidden" id="csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <label><input type="text" placeholder="아이디입력" id="id-input"></label>
+                <label><input type="email" placeholder="이메일입력" id="email-input"></label>
+                <button type="button" id="find-pw">이메일 전송하기</button>
+            </div>
+
+        </section>
+    </main>
+</body>
+</html>
+
+<script>
+    const phone = document.querySelector('input[type=text]');
+    const findIdBtn = document.querySelector('#find-id');
+    const phoneNum = document.querySelector('#phoneNum');
+    const findPwBtn = document.querySelector('#find-pw');
+    const idInput = document.querySelector('#id-input');
+    const emailInput = document.querySelector('#email-input');
+    const csrf = document.querySelector('#csrf');
+
+
+    // 폰번호 자동화
+    phone.onchange = () => {
+        phone.value = phone.value.replace(/[^0-9]/g, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+    }
+
+
+    // 아이디 찾기
+    findIdBtn.onclick = () => {
+        fetch(`/user/find/id/${phoneNum.value}`)
+            .then(response => {return response.text()})
+            .then(text => {
+                alert(text);
+            }
+            )
+    }
+
+    findPwBtn.onclick = () => {
+        console.log(idInput.value);
+        console.log(emailInput.value);
+        fetch('/user/find/pw', {
+            method: 'post',
+            headers: {
+                "Content-Type":"application/json",
+                "X-Csrf-Token": csrf.value
+            },
+            body: JSON.stringify({id: idInput.value, email:emailInput.value})
+        }).then(resp => {return resp.text()})
+            .then(value => {
+                console.log(value);
+                alert(value);
+            })
+    }
+
+
+</script>

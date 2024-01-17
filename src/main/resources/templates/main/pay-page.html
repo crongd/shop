@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>주문페이지</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        background-color: antiquewhite;
+    }
+
+
+    li > a {
+        display: inline-block;
+        border: 1px solid black;
+        text-decoration: none;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: cadetblue;
+        margin: 10px 50px;
+        padding: 20px 50px;
+    }
+
+    section {
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+    }
+
+    .pay-container {
+        margin: 20px 0;
+        padding: 0 20px;
+        border: 1px solid black;
+        width: 600px;
+
+    }
+
+    .btn {
+        margin: 20px 10px;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .pay1 {
+        /*display: none;*/
+        display: block;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .pay2 {
+        display: none;
+        border: 1px solid black;
+        padding: 20px;
+    }
+
+    .card-num {
+        width: 40px;
+    }
+
+    /* number button remove */
+    input::-webkit-inner-spin-button {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .addr {
+        width: 300px;
+    }
+
+    footer {
+        background-color: darkgrey;
+        color: white;
+        bottom: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+    }
+
+    td:nth-child(2){
+        width: 100px;
+        height: 100px;
+    }
+
+    .item-title {
+        text-align: left;
+    }
+
+
+</style>
+<body>
+    <header>
+        <ul>
+            <li><a href="#">의류</a></li>
+            <li><a href="#">가전</a></li>
+            <li><a href="#">자동차용품</a></li>
+            <li><a href="#">반려동물</a></li>
+        </ul>
+    </header>
+
+    <hr>
+
+    <main>
+        <h1 style="text-align: center">주문</h1>
+        <hr>
+        <section>
+            <table>
+                <tr>
+                    <th colspan="5">구매 목록</th>
+                </tr>
+                <tr>
+                    <th id="item-check">선택</th>
+                    <th id="item-img">상품 이미지</th>
+                    <th id="item-content">제목 / 상품설명</th>
+                    <th id="item-price">가격 / 수량</th>
+                </tr>
+
+                <tr style="border: 1px solid black">
+                    <td class="item-check"><label><input type="checkbox"></label></td>
+                    <td style="background-image: url('https://www.boardlife.co.kr/wys2/file_attach/2015/10/14/1444752096-91.jpg')"></td>
+                    <td class="item-content">
+                        <h3 class="item-title">상품명</h3> <br>
+                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                    </td>
+                    <td class="item-price">
+                        <div>10,000원</div>
+                        <div><span>1</span>개</div>
+                    </td>
+                </tr>
+                <tr style="border: 1px solid black">
+                    <td class="item-check"><label><input type="checkbox"></label></td>
+                    <td style="background-image: url('https://www.boardlife.co.kr/wys2/file_attach/2015/10/14/1444752096-91.jpg')"></td>
+                    <td class="item-content">
+                        <h3 class="item-title">상품명</h3> <br>
+                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                    </td>
+                    <td class="item-price">
+                        <div>10,000원</div>
+                        <div><span>1</span>개</div>
+                    </td>
+                </tr>
+                <tr style="height: 50px">
+                    <td colspan="2">총 가격</td>
+                    <td colspan="3" style="height: 50px">150000원</td>
+                </tr>
+
+
+            </table>
+        </section>
+        <section>
+            <div class="pay-container">
+                <h3 style="text-align: center">주문서</h3>
+                <hr>
+                <label>주문자명 <input type="text"></label> <br>
+                <label>휴대폰번호 <input type="text"></label> <br>
+                배송지 <button id="addr">찾기</button>
+                <br>
+                <label><input type="text" class="addr"></label> <br>
+                <label><input type="text" class="addr"></label>
+                <br>
+                <label>배송요청사항 <br><textarea cols="80" rows="7" placeholder="배송요청 사항은 결제 필수 정보로 처리하지 않았습니다. 배송지도 readonly로 설정해 팝업에서 반드시 수행하게 하려 했으나 팝업 연결 불가로 생략했습니다."></textarea></label> <br>
+
+                <span>결제수단</span>
+                <br>
+                <label><input type="radio" name="pay" checked>신용카드</label>
+                <label><input type="radio" name="pay">간편결제</label>
+                <div class="pay1">
+                    <span>신용카드 결제</span>
+                    <br>
+                    <label>
+<!--                        <span>카드사</span>-->
+                        <select name="" id="">
+                            <option hidden="hidden">카드사 선택</option>
+                            <option>신한</option>
+                            <option>국민</option>
+                            <option>새마을</option>
+                        </select>
+                    </label> <br>
+                    <label>
+                        카드번호
+                        <input type="number" class="card-num"> -
+                        <input type="number" class="card-num"> -
+                        <input type="number" class="card-num"> -
+                        <input type="number" class="card-num">
+                    </label>
+                </div>
+                <div class="pay2">
+                    <span>간편결제</span>
+                    <br>
+                    <!--링크 누르면 로그인 연계-->
+                    <a href="#">카카우페이</a>
+                    <a href="#">네이바페이</a>
+                    <a href="#">삼송페이</a>
+                </div>
+                <br>
+                <div style="text-align: center">
+                    <button class="btn">취소</button>
+                    <button class="btn">결제완료</button>
+                </div>
+            </div>
+        </section>
+        <div>
+        </div>
+    </main>
+    <footer>
+        <hr>
+        <div class="footer-container">
+            <div>→ 온라인상담: daegu-koreaislab.co.kr</div>
+            <div>→ 전화문의: ☎ 053-710-5926</div>
+            <div>→ 오시는 길: https://map.naver.com/v5/entry/place/1199413968</div>
+        </div>
+    </footer>
+
+
+<!--헤더-->
+<!--메인-->
+<!--푸터-->
+<!--시멘틱 태그 3가지-->
+<!--주문정보 무조건 입력 js 정규식-->
+<!--주문자명, 주문자 휴대폰번호, 배송지 정보, 배송요청사항, 결제수단-->
+<!--배송지 정보는 팝업으로 입력-->
+<!--결제수단 신용, 간편 2가지-->
+<!--결제수단 선택에 따라 내용이 변경-->
+
+</body>
+</html>
+<script>
+    const addrBtn = document.querySelector('#addr');
+    const [cBtn, sBtn] = document.getElementsByClassName('btn');
+    const [name,phone,addr1] = document.querySelectorAll('input[type=text]');
+    const [pay1, pay2] = document.querySelectorAll('input[type=radio]')
+    const [payDiv1] = document.getElementsByClassName('pay1');
+    const [payDiv2] = document.getElementsByClassName('pay2');
+
+    pay1.onchange = () => {
+        payDiv1.style.display='block';
+        payDiv2.style.display='none';
+    }
+
+    pay2.onchange = () => {
+        payDiv2.style.display='block';
+        payDiv1.style.display='none';
+    }
+
+
+    // 주소지 팝업
+    addrBtn.onclick= () => {
+        console.log('주소 클릭')
+        window.open('http://localhost:63342/shop/src/main/resources/templates/main/addr.html?_ijt=geb31t70659hjisalgl8tdl2pt&_ij_reload=RELOAD_ON_SAVE', '주소찾기', 'width=550, height=250, left=300, top=400 scrollbars=0, toolbar=0, menubar=no')
+    }
+
+    // 취소버튼 클릭 (전 페이지로?)
+    cBtn.onclick = () => {
+        // window.location.href = '장바구니';
+    }
+
+    //폰번호 (정규식, 자동화(?) - 버튼 생략 가능 자동화)
+    phone.onchange = () => {
+        phone.value = phone.value.replace(/[^0-9]/g, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+    }
+
+
+    // 결제완료 버튼 (필수 정보 입력 확인)
+    sBtn.onclick = () => {
+        if (name.value === "" || phone.value === "" || addr1.value === "") {
+            alert('결제 필수 정보가 비어있다');
+        }
+    }
+
+
+</script>

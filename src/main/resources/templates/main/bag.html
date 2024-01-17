@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    article {
+        display: flex;
+        justify-content: center;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 50px;
+        font-size: 3rem;
+    }
+
+    table {
+        width: 800px;
+        margin: 0 auto 20px;
+        /*border: 1px solid black;*/
+    }
+
+    .x {
+        margin: 30px;
+        color: black;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    td:nth-child(2){
+        width: 180px;
+        height: 180px;
+    }
+
+    #item-check {
+        width: 60px;
+    }
+
+    .item-check {
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+    }
+
+    .item-content {
+        padding: 10px;
+    }
+
+    #item-price {
+        width: 135px;
+    }
+
+    .item-price {
+        text-align: center;
+    }
+
+    input[type='checkbox'] {
+        width: 20px;
+        height: 50px;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        width: 25px;
+    }
+
+    div > i {
+        font-size: 20px;
+    }
+
+    .item-count {
+        margin-top: 10px;
+    }
+
+    .item-count > i:hover {
+        cursor: pointer;
+    }
+
+    .progress-chart {
+        text-align: right;
+        margin: 0 50px;
+    }
+
+    /***********************************************************/
+
+    section {
+        /*right: 10%;*/
+        margin: 20px 20px;
+        position: sticky;
+        top: 20px;
+        width: 350px;
+        height: 265px;
+        border: 1px solid darkgray;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .buy-title {
+        /*border: 1px solid black;*/
+        border-bottom: 1px solid darkgray;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .buy-container {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .buy-content {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px;
+    }
+
+
+    .buy-bth {
+        background-color: #5055b0;
+        border: 1px solid white;
+        border-radius: 5px;
+        box-sizing: border-box;
+        width: 240px;
+        height: 35px;
+        font-size: 1rem;
+        color: white;
+    }
+
+    .buy-bth:hover {
+        cursor: pointer;
+        background-color: #3a3a88;
+    }
+
+
+</style>
+<body>
+    <h1>장바구니</h1>
+    <div class="progress-chart">
+        <span style="font-weight: bold">장바구니</span>
+        <i class="fa-solid fa-chevron-right" style="color: darkgray"></i>
+        <span style="color: darkgray">주문/결제</span>
+        <i class="fa-solid fa-chevron-right" style="color: darkgray"></i>
+        <span style="color: darkgray">주문완료</span>
+    </div>
+    <hr style="margin: 20px">
+    <article>
+        <main>
+            <table>
+                <tr>
+                    <th colspan="5">담은 상품</th>
+                </tr>
+                <tr>
+                    <th id="item-check">선택</th>
+                    <th id="item-img">상품 이미지</th>
+                    <th id="item-content">제목 / 상품설명</th>
+                    <th id="item-price">가격</th>
+                </tr>
+
+                <tr style="border: 1px solid black">
+                    <td class="item-check"><label><input type="checkbox"></label></td>
+                    <td style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg')"></td>
+                    <td class="item-content">
+                        <h3 class="item-title">제목</h3> <br>
+                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                    </td>
+                    <td class="item-price">
+                        <div>10,000원</div>
+                        <div class="item-count">
+                            <i class="fa-solid fa-minus"></i>
+                            <label><input type="number" min="1" value="1" readonly></label>
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </td>
+                    <td class="item-remove"><a href="#"><i class="fa-solid fa-x x"></i></a></td>
+                </tr>
+                <tr style="border: 1px solid black">
+                    <td class="item-check"><label><input type="checkbox"></label></td>
+                    <td style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg')"></td>
+                    <td class="item-content">
+                        <h3 class="item-title">제목</h3> <br>
+                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                    </td>
+                    <td class="item-price">
+                        <div>10,000원</div>
+                        <div class="item-count">
+                            <i class="fa-solid fa-minus"></i>
+                            <label><input type="number" min="1" value="1" readonly></label>
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </td>
+                    <td class="item-remove"><a href="#"><i class="fa-solid fa-x x"></i></a></td>
+                </tr>
+
+            </table>
+
+        </main>
+
+        <section>
+            <div class="buy-title">구매목록</div>
+            <div class="buy-container">
+                <div class="buy-content"><span>상품금액</span><span>145000원</span></div>
+                <div class="buy-content"><span>배 송 비 </span><span>+ 3000원</span></div>
+                <hr style="margin: 30px 0">
+                <div class="buy-content"><span>결제 예정 금액 </span><span>148000원</span></div>
+            </div>
+            <button class="buy-bth">구매하기</button>
+        </section>
+    </article>
+
+
+</body>
+</html>
+<script>
+
+    // function 으로 빼려고 했으나 이렇게 하는게 좋겠군
+    const itemCountDivs = document.getElementsByClassName('item-count');
+    [...itemCountDivs].forEach(itemCountDiv => {
+        const [mBtn, pBtn] = itemCountDiv.querySelectorAll('i');
+        const count = itemCountDiv.querySelector('input[type=number]');
+
+        mBtn.onclick = () => {
+            if (parseInt(count.value) > 1) {
+                count.value = parseInt(count.value) - 1;
+            } else {
+                alert('수량은 1보다 같거나 큰 수를 입력해야 합니다.')
+            }
+        }
+
+        pBtn.onclick = () => {
+            count.value = parseInt(count.value) + 1;
+        }
+    })
+
+
+</script>

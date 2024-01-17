@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>item page</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+</head>
+<style>
+
+    h1 {
+        text-align: center;
+    }
+
+    .item-category {
+        text-align: right;
+        border: 1px solid black;
+    }
+
+    .item-title-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .item-content {
+        border: 1px solid black;
+        width: 510px;
+        position: relative;
+        box-sizing: border-box;
+        margin-left: 5px;
+        padding: 10px;
+    }
+
+    .item-img {
+        width: 510px;
+        height: 510px;
+        border: 1px solid black;
+        background-image: url("https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzExMjNfNzIg%2FMDAxNzAwNzQ3MTI5NDM0.skC1L1gK7kScV9z9bxPY2bgk_7ARhD_fv-RemR0FXfgg.Q_pxKrfOIsN_erRGD40DvB7P9hqBhuKqTFFNh06wXnog.JPEG.vkfksskfk7257%2FKakaoTalk_20231123_223048852_04.jpg&type=sc960_832");
+        background-repeat: no-repeat;
+        background-size: cover;
+        box-sizing: border-box;
+    }
+
+    .item-price {
+        border: 1px solid black;
+        text-align: right;
+        padding: 10px;
+    }
+
+    .option-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .option {
+        width: 85%;
+        height: 35px;
+    }
+
+    .btn {
+        width: 150px;
+        height: 40px;
+        margin: 5px;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+
+    .btn:hover {
+        cursor: pointer;
+        background-color: darkgray;
+    }
+
+    .remote-container {
+        text-align: center;
+    }
+
+    .control {
+        position: absolute;
+        bottom: 10px;
+        margin-left: 8px;
+    }
+
+    .item-main-container {
+        text-align: center;
+        /*border: 1px solid darkgray;*/
+        margin: 0 auto;
+        padding: 0 100px;
+    }
+
+    .top-btn {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        right: 30px;
+        bottom: 30px;
+        border: 1px solid black;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        border-radius: 50%;
+        text-decoration: none;
+        background-color: darkgray;
+        color: black;
+    }
+
+
+    /***********************************리뷰*********************************/
+    .review-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .review {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 150px;
+        height: 150px;
+        border: 1px solid darkgray;
+        margin: 20px 30px;
+        text-align: center;
+        font-size: 25px;
+    }
+
+    .a-tag {
+        text-decoration: none;
+        color: black;
+        margin: 10px;
+    }
+
+    .review-content {
+        border: 1px solid darkgray;
+        padding: 30px;
+        width: 50%;
+    }
+
+    .review-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .review-content-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .review-like {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 15%;
+        border: 1px solid black;
+    }
+
+    .like-btn {
+        width: 60px;
+        height: 30px;
+        border: 1px solid black;
+        border-radius: 10px;
+        background-color: white;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .like-btn:hover {
+        background-color: darkgray;
+    }
+
+    .review-list-li {
+        margin: 10px 0 0;
+    }
+
+
+</style>
+<body>
+    <h1>상품 상세 페이지</h1>
+    <div class="item-category">
+        <span th:each="category : ${categories}" th:text="${category.name} + ' | '"></span>
+
+    </div>
+    <hr>
+    <form class="form-container">
+
+        <section class="item-title-container">
+            <img class="item-img" th:src="${product.mainImg}" alt="main-image"/>
+            <div class="item-content">
+                <h3 th:text="${product.title}">제에모옥~~~</h3>
+                <div class="item-price"> &#8361; <span th:text="${product.price}">15,000</span></div>
+                <hr>
+                <div class="control">
+                    <h3 th:if="${product.productOptions.size() != 0}">옵션</h3>
+                    <label class="option-container">
+                        <th:block th:if="${product.productOptions.size() != 0}">
+                            <select name="option" class="option">
+                                <option hidden="hidden">선택</option>
+                                <option value="1" th:each="option : ${product.productOptions}" th:text="${option.name}">옵션1</option>
+                            </select>
+                        </th:block>
+
+    <!--                </label>-->
+    <!--                <label class="option-container">-->
+    <!--                    <select name="option2" class="option">-->
+    <!--                        <option hidden="hidden">선택</option>-->
+    <!--                        <option value="4">옵션4</option>-->
+    <!--                        <option value="5">옵션5</option>-->
+    <!--                        <option value="6">옵션6</option>-->
+    <!--                    </select>-->
+    <!--                </label>-->
+                    <br>
+                    <div class="remote-container">
+                        <button type="button" class="btn"><i class="fa-regular fa-heart"></i>찜!</button>
+                        <button type="button" class="btn" id="cart-btn"><i class="fa-solid fa-basket-shopping"></i>장바구니</button>
+                        <button type="button" class="btn"><i class="fa-regular fa-credit-card"></i>구매</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </form>
+
+    <hr>
+
+    <!--상세 설명-->
+    <section>
+        <div class="item-main-container" th:each="img : ${product.productImages}">
+            <img style="margin: 0; padding: 0;" th:src="${img.savedFileName}" alt="상품 이미지">
+        </div>
+
+    </section>
+
+    <hr>
+
+    <!--리뷰란-->
+    <section>
+        <div class="review-container">
+            <div class="review">
+                <div>전체 리뷰수</div>
+                <div><i class="fa-regular fa-comment"></i></div>
+                <div>100</div>
+            </div>
+            <div class="review">
+                <div>사용자 평점</div>
+                <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <div><span>3</span> <span style="color: darkgray">/ 5</span></div>
+            </div>
+            <a href="#" class="a-tag">평점순</a> /
+            <a href="#" class="a-tag">인기순</a> /
+            <a href="#" class="a-tag">최신순</a>
+        </div>
+        <hr>
+        <div>
+            <ul class="review-list">
+                <li class="review-list-li">
+                    <div class="review-content-container">
+                        <div class="review-content">
+                            <div>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div><span>username</span> <span>23-12-19 15:21:10</span></div>
+                            <p>고구마가 어엄청 맛있어요.</p>
+                            <!--여긴 그냥 두고 작성에서 max를 걸어야 할 듯-->
+                        </div>
+
+                        <div class="review-like">
+                            <button class="like-btn">
+                                <i class="fa-regular fa-thumbs-up"></i>
+                                <span>10</span>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="review-list-li">
+                    <div class="review-content-container">
+                        <div class="review-content">
+                            <div>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div><span>username</span> <span>23-12-19 15:21:10</span></div>
+                            <p>고구마가 어엄청 맛있어요.</p>
+                            <!--여긴 그냥 두고 작성에서 max를 걸어야 할 듯-->
+                        </div>
+
+                        <div class="review-like">
+                            <button class="like-btn">
+                                <i class="fa-regular fa-thumbs-up"></i>
+                                <span>10</span>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </section>
+
+    <a href="#" class="top-btn"><i class="fa-solid fa-arrow-up"></i></a>
+
+</body>
+</html>
+
+<script>
+    // 상단 이동 스크롤 버튼 js
+    const topBtn = document.querySelector('.top-btn');
+    const cartBtn = document.querySelector('#cart-btn');
+
+    window.onscroll = () => {
+        if (scrollY < 300) {
+            topBtn.style.display='none';
+        } else {
+            topBtn.style.display='flex';
+        }
+    }
+
+    cartBtn.onclick = () => {
+
+    }
+
+
+</script>

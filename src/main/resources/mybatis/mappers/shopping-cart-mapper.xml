@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.mappers.ShoppingCartMapper" >
+
+    <!-- 해당 유저의 장바구니 모든 정보 가져오기   -->
+    <select id="get_shopping_cart" resultType="com.shop.dto.shopping.ShoppingCartDTO">
+        SELECT * FROM `shopping_cart` WHERE `user_id` = #{id}
+    </select>
+
+    <!-- 장바구니에 상품 추가   -->
+    <insert id="insert_shopping_cart" parameterType="com.shop.dto.shopping.ShoppingCartDTO">
+        INSERT INTO `shopping_cart` VALUES (NULL, #{user.id}, #{product.no}, #{amount})
+    </insert>
+
+    <!-- 장바구니의 한 상품의 옵션 추가   -->
+    <insert id="insert_shopping_cart_option" parameterType="com.shop.dto.shopping.ShoppingCartDTO">
+        <selectKey keyProperty="no" order="BEFORE">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        INSERT INTO `shopping_cart_option` VALUES
+        <foreach collection="product.productOptions" item="options" separator=",">
+            (NULL, #{no}, #{options.no})
+        </foreach>
+    </insert>
+
+</mapper>

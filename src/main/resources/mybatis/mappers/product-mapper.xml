@@ -1,0 +1,138 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.mappers.ProductMapper" >
+
+    <resultMap id="product_result_map" type="com.shop.dto.product.ProductDTO" autoMapping="true">
+        <id property="no" column="product_no"/>
+
+        <association property="category" javaType="com.shop.dto.product.Category">
+            <id property="no" column="category_no" />
+        </association>
+
+        <collection property="productImages" ofType="com.shop.dto.ImageFileDTO" javaType="list" autoMapping="true">
+            <id property="no" column="image_no" />
+            <result property="savedFileName" column="product_img" />
+        </collection>
+
+        <collection property="productOptions" ofType="com.shop.dto.product.ProductOptionDTO" javaType="list">
+            <id property="no" column="option_no" />
+            <result property="name" column="name" />
+            <result property="additionalPrice" column="additional_price" />
+        </collection>
+    </resultMap>
+
+    <select id="get_product_by_no" resultMap="product_result_map" >
+        select *,
+        p.no as product_no,
+        pi.no as image_no,
+        po.no as option_no
+        from product p
+        left outer join product_img pi
+        on p.no = pi.product_no
+        left outer join `product_option` po
+        on p.no = po.product_no
+        where p.no = #{no}
+        order by pi.no;
+    </select>
+
+    <select id="all_products" resultMap="product_result_map" >
+        select *,
+        p.no as product_no,
+        pi.no as image_no
+        from product p
+        left outer join product_img pi
+        on p.no = pi.product_no
+        <where>
+            <if test="searchWord != null">
+                p.title LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="order == 'price'">
+                order by p.price
+            </when>
+            <when test="order == 'recent'">
+                order by p.write_date
+            </when>
+            <when test="order == 'popular'">
+                order by p.title
+            </when>
+        </choose>
+        limit 150
+    </select>
+
+    <select id="get_categories" resultType="com.shop.dto.product.Category" >
+        select * from category where parent_no = #{cateNo}
+    </select>
+
+<!--    where parent = #{categoryNo}-->
+    <select id="get_big_category" resultType="com.shop.dto.product.ProductDTO" >
+        SELECT * FROM product p left outer join category c on p.category_no = c.no
+
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="no != 0" >
+                parent_no = #{no}
+            </if>
+            <if test="searchWord != null">
+                and p.title LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </trim>
+            <choose>
+                <when test="order == 'price'">
+                    order by p.price
+                </when>
+                <when test="order == 'recent'">
+                    order by p.write_date
+                </when>
+                <when test="order == 'popular'">
+                    order by p.title
+                </when>
+            </choose>
+            limit 150
+    </select>
+
+    <select id="get_product_by_category" resultType="com.shop.dto.product.ProductDTO" >
+        select * from product where category_no = #{cateNo}
+    </select>
+
+<!--    product.price, 0, 'COMMA'-->
+
+    <!-- 카테고리 중 대분류만 가져온다   -->
+<!--    <select id="get_categories" resultType="com.shop.dto.product.Category">-->
+<!--        SELECT * FROM `category` WHERE `parent_no` = 0-->
+<!--    </select>-->
+
+    <!--  카테고리 중 대분류가 아닌 카테고리들만 가져온다  #{parentNo}   -->
+    <select id="get_category_by_no" resultType="com.shop.dto.product.Category">
+        WITH RECURSIVE `category_cte` AS
+        (
+        SELECT `no`, `parent_no`, `name`, `level` FROM `category` WHERE `no` = #{parentNo}
+        UNION ALL
+        SELECT CC.`no`, CC.`parent_no`, CC.`name`, CC.`level` FROM `category` CC
+        INNER JOIN `category_cte` CP
+        ON CC.`parent_no` = CP.`no`
+        )
+        SELECT * FROM `category_cte` WHERE `parent_no` != 0 ORDER BY `parent_no`;
+    </select>
+
+    <!--  카테고리 중 대분류가 아닌 카테고리들만 가져온다  #{parentNo}   -->
+    <select id="get_category_of_product" parameterType="com.shop.dto.product.Category" resultType="com.shop.dto.product.Category">
+        WITH RECURSIVE `category_cte` AS
+        (
+            SELECT `no`, `parent_no`, `name`, `level` FROM `category` WHERE `no` = #{no}
+            UNION ALL
+            SELECT CP.`no`, CP.`parent_no`, CP.`name`, CP.`level` FROM `category` CP
+            INNER JOIN `category_cte` CC
+            ON CP.`no` = CC.`parent_no`
+        )
+        SELECT * FROM `category_cte` ORDER BY `LEVEL`;
+    </select>
+
+
+
+
+
+
+
+</mapper>

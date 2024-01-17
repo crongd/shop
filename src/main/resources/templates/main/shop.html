@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>shopping</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+</head>
+<style> /*side*/
+/** {*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+
+    .side-bar {
+        /*display: inline-block;*/
+        width: 300px;
+        height: 100vh;
+        /*overflow: auto;*/
+        position: sticky;
+        top: 0;
+        border: 1px solid black;
+        /*margin-right: 20px;*/
+        background-image: linear-gradient(to right, #fc3d40, #fc6d5b 80%);
+    }
+
+    #logo {
+        display: inline-block;
+        /*box-sizing: border-box;*/
+        width: 100%;
+        height: 80px;
+        /*border: 1px solid black;*/
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz3-nwgWBW3TbiSHcjgqhLKo_bpIFbUAwOHw&usqp=CAU");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /*margin: 5px 10px;*/
+        margin: 10px 0;
+    }
+
+    #user-container {
+        display: inline-block;
+        width: 100%;
+        /*border: 1px solid black;*/
+        /*border-radius: 20px;*/
+        /*margin: 30px ;*/
+        padding: 30px 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+    }
+
+    #user-container > a {
+        color: white;
+        text-decoration: none;
+        margin: 0 20px;
+        padding: 7px;
+        border: 1px solid white;
+        border-radius: 10px;
+    }
+
+    nav {
+        width: 300px;
+        height: 100%;
+        text-align: center;
+    }
+
+    #link {
+        list-style: none;
+        color: white;
+    }
+
+    .category {
+        margin-top: 50px;
+        font-size: 1.5rem;
+        height: 80px;
+    }
+
+    .category > a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+    }
+
+    .category > a:hover {
+        text-decoration: underline;
+        color: darkgray;
+        cursor: pointer;
+    }
+
+
+</style>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+    }
+
+    main {
+        width: 81%;
+        /*margin-left: 300px;*/
+        /*display: inline-block;*/
+    }
+
+    .goods-container {
+        /*border: 1px solid black;*/
+        display: grid;
+        grid-template-columns: repeat(5, 220px);
+        /*justify-content: center;*/
+    }
+
+    .title {
+        margin: 5px 0 10px;
+        text-align: center;
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .goods {
+        list-style: none;
+        margin: 20px;
+        border: 1px solid black;
+        width: 200px;
+        height: 300px;
+    }
+
+    .image {
+        width: 100%;
+        height: 75%;
+    }
+
+    .goods-link {
+        text-decoration: none;
+        color: black;
+    }
+
+    .search-container {
+        text-align: right;
+        margin: 20px;
+        color: black;
+    }
+
+
+    /*loading css*/
+    .loading {
+        margin-top: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        animation: loading 1s linear infinite;
+        background-color: black;
+    }
+
+    .loading span:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    .loading span:nth-child(2) {
+        animation-delay: 0.2s;
+        margin: 0 10px
+    }
+
+    .loading span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /*loading image*/
+    @keyframes loading {
+        0%, 100% {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+    }
+
+
+    /*반응형 grid*/
+    @media screen and (max-width: 2000px) {
+        .goods-container {
+            grid-template-columns: repeat(7, 220px);
+        }
+    }
+
+    @media screen and (max-width: 1750px) {
+        .goods-container {
+            grid-template-columns: repeat(6, 220px);
+        }
+    }
+
+    @media screen and (max-width: 1500px) {
+        .goods-container {
+            grid-template-columns: repeat(5, 220px);
+        }
+    }
+
+    @media screen and (max-width: 1310px) {
+        .goods-container {
+            grid-template-columns: repeat(4, 220px);
+        }
+    }
+
+    @media screen and (max-width: 1080px) {
+        .goods-container {
+            grid-template-columns: repeat(3, 220px);
+        }
+    }
+
+    @media screen and (max-width: 850px) {
+        .goods-container {
+            grid-template-columns: repeat(2, 220px);
+        }
+    }
+
+    .dropdown-select {
+        text-align: right;
+        padding: 10px 20px;
+    }
+
+
+    .category-list {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        padding: 10px;
+    }
+
+    .category-list-ul {
+        display: flex;
+        list-style: none;
+        justify-content: space-around;
+    }
+
+    .category-list li {
+        color: orangered;
+        text-decoration: none;
+    }
+
+    .category-list li:hover {
+        color: orange;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .category-list li {
+        padding: 10px 20px;
+        border: 1px solid black;
+        border-radius: 10px;
+        font-size: 1.6rem;
+    }
+
+    .product-title {
+        max-height: 2.6rem;
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: keep-all;
+    }
+
+</style>
+
+<body>
+<!--    <th:block th:replace="/public/side :: side-bar"></th:block>-->
+
+<aside style="margin: 0; padding: 0;" class="side-bar">
+    <nav style="margin: 0; padding: 0;">
+        <a href="/">
+            <div id="logo"></div>
+        </a>
+
+        <div id="user-container">
+            <a href="/user/login" class="user">로그인</a> <!--로그인 화면 get-->
+            <a href="/user/join" class="user">회원가입</a> <!--회원가입 화면 get-->
+        </div>
+        <div>
+            <input type="hidden" class="category-value" value="0">
+            <input type="hidden" class="category-value" value="1">
+            <input type="hidden" class="category-value" value="2">
+            <input type="hidden" class="category-value" value="3">
+            <input type="hidden" class="category-value" value="4">
+        </div>
+
+        <ul id="link">
+            <li class="category"><a><i>전체</i></a></li>
+            <li class="category"><a th:value="1"><i class="fa-solid fa-shirt">의류</i> </a></li>
+            <li class="category"><a th:value="2"><i class="fa-solid fa-tv">전자기기</i></a></li>
+            <li class="category"><a th:value="3"><i class="fa-solid fa-car">자동차용품</i></a></li>
+            <li class="category"><a th:value="4"><i class="fa-solid fa-cat">반려동물</i></a></li>
+        </ul>
+    </nav>
+</aside>
+
+
+<main>
+    <input type="hidden" id="now-category">
+
+    <h2 class="title">타이틀</h2>
+    <div class="search-container">
+        <label><input id="search-input" type="text" placeholder="검색어" style="width:200px;height:30px;"></label>
+        <button id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="dropdown-select">
+        <label>
+            <select name="" id="">
+                <option value="popular">인기순</option>
+                <option value="recent">최신순</option>
+                <option value="price">가격순</option>
+            </select>
+        </label>
+    </div>
+    <div class="category-list">
+        <ul class="category-list-ul">
+        </ul>
+    </div>
+    <hr>
+    <ul class="goods-container">
+
+
+    </ul>
+    <div class="loading">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <th:block th:text="${#authentication}"></th:block>
+
+    <!--loading target-->
+</main>
+
+
+
+
+
+</body>
+</html>
+
+<script>
+
+    // const ul = document.querySelector('.goods-container');
+    // const target = document.querySelector('#btn');
+    // 반응은 하니까 나중에 json으로 가져와서 추가하면 되고 option 내용좀 확인 해야할 듯
+    // let options = {
+    //     root: null,
+    //     rootMargin: "0px",
+    //     threshold: 1,
+    // };
+    //
+    // let intersectionObserver = new IntersectionObserver(callback => {
+    //     for (let i = 0; i < 10; i++) {
+    //         ul.insertAdjacentHTML('beforeend', '<li class="goods">\n' +
+    //             '            <a href="#" class="goods-link">\n' +
+    //             '                <img src="https://image.edaily.co.kr/images/photo/files/NP/S/2023/06/PS23062700701.jpg" alt="사진" class="image">\n' +
+    //             '                <div>\n' +
+    //             '                    <div>테슬라</div>\n' +
+    //             '                    <div style="margin: 10px 0">\n' +
+    //             '                        <span>\\</span>\n' +
+    //             '                        <span>1,000,000,000</span>\n' +
+    //             '                    </div>\n' +
+    //             '                </div>\n' +
+    //             '            </a>\n' +
+    //             '            </li>')
+    //     }
+    // }, options);
+    //
+    // intersectionObserver.observe(target);
+
+</script>
+
+
+<script>
+    // const csrf = document.querySelector('#csrf');
+    const select = document.querySelector('select');
+    const searchInput = document.querySelector('#search-input');
+    const productList = document.querySelector('.goods-container');
+    const [all, clothes, electronics, car, pet] = document.querySelectorAll('#link li i');
+    const [allVal, clothesVal, electronicsVal, carVal, petVal] = document.querySelectorAll('.category-value');
+    const searchBtn = document.querySelector('#search-button');
+    const nowCategory = document.querySelector('#now-category');
+    const categoryContainer = document.querySelector('.category-list-ul');
+
+    searchBtn.onclick = () => {
+        product_select(nowCategory.value);
+    }
+
+    // 첫페이지에 무조건 실행
+    product_select(0);
+
+    // 전체 atag 클릭시 전체 내용
+    all.onclick = () => {
+        product_select(0)
+        nowCategory.value = 0;
+        window.scrollTo(0,0);
+        categoryContainer.innerHTML = "";
+    }
+
+    // 의류에 대한 모든 정보가 나오도록
+    clothes.onclick = () => {
+        product_select(clothesVal.value);
+        nowCategory.value = 1;
+        window.scrollTo(0,0);
+        product_select_category(clothesVal.value)
+    }
+
+    // 전자기기에 대한 모든 정보가 나오도록
+    electronics.onclick = () => {
+        console.log(electronicsVal.value)
+        product_select(electronicsVal.value);
+        nowCategory.value = 2;
+        window.scrollTo(0,0);
+        product_select_category(electronicsVal.value)
+
+    }
+
+    // 자동차에 대한 모든 정보가 나오도록
+    car.onclick = () => {
+        console.log(carVal.value)
+        product_select(carVal.value);
+        nowCategory.value = 3;
+        window.scrollTo(0,0);
+        product_select_category(carVal.value)
+    }
+
+    // 반려동물에 대한 모든 정보가 나오도록
+    pet.onclick = () => {
+        console.log(petVal.value)
+        product_select(petVal.value)
+        nowCategory.value = 4;
+        window.scrollTo(0,0);
+        product_select_category(petVal.value)
+    }
+
+
+    function product_select_category(cateNo) {
+        fetch(`/product/category/${cateNo}`)
+            .then(value => {return value.json()})
+            .then(categories => {
+                categoryContainer.innerHTML = "";
+                for (category of categories) {
+                    categoryContainer.insertAdjacentHTML('beforeend', `<li onclick="product_by_category('${category['no']}'); window.scrollTo(0,0); nowCategory.value=${category['no']};">${category['name']}</li>`)
+                }
+            })
+    }
+
+
+    function product_by_category(cateNo) {
+        fetch(`/product/category?cateNo=${cateNo}`)
+            .then(response => {return response.json()})
+            .then(list => {
+                productList.innerHTML = "";
+                for (product of list) {
+                    productList.insertAdjacentHTML('beforeend',
+                        `<li class="goods">
+                    <a href="/product/${product['no']}" class="goods-link">
+                        <img src="${product['mainImg']}" alt="mainImage" class="image">
+                        <div>
+                            <div class="product-title">${product['title']}</div>
+                            <div style="margin: 10px 0">
+                                <span>&#8361;</span>
+                                <span>${product['price']}</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>`)
+                }
+            })
+    }
+
+
+    function product_select(category) {
+        console.log(category)
+        fetch(`/product?searchWord=${searchInput.value}&order=${select.value}&category=${category}`
+            // method : 'post',
+            // headers : {"ContentType":"application/json","X-Csrf-Token": csrf.value},
+            // body : JSON.stringify({searchWord : searchInput.value, order : select.value})
+        ).then(value => {return value.json()})
+            .then(list => {
+                productList.innerHTML = "";
+                for (product of list) {
+                    productList.insertAdjacentHTML('beforeend',
+                        `<li class="goods">
+                    <a href="/product/${product['no']}" class="goods-link">
+                        <img src="${product['mainImg']}" alt="mainImage" class="image">
+                        <div>
+                            <div class="product-title">${product['title']}</div>
+                            <div style="margin: 10px 0">
+                                <span>&#8361;</span>
+                                <span>${product['price']}</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>`)
+                }
+            })
+    }
+</script>

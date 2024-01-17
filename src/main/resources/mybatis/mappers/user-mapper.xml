@@ -1,0 +1,53 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.mappers.UserMapper" >
+
+    <resultMap id="find_user_with_details" type="com.shop.dto.user.UserDTO" autoMapping="true">
+        <id property="id" column="uID" />
+        <association property="imageFile" autoMapping="true">
+            <result property="data" column="profile_img" />
+        </association>
+        <association property="snsInfo" autoMapping="true">
+            <id property="id" column="sID" />
+        </association>
+    </resultMap>
+
+    <select id="find_user" resultMap="find_user_with_details">
+        SELECT `SNS`.*, `USER`.*, `USER`.`id` AS 'uID', `SNS`.`id` AS 'sID'
+        FROM `user` `USER`
+        LEFT OUTER JOIN `sns_info` `SNS`
+        ON `SNS`.id = #{userDTO.snsInfo.id}
+        <where>
+            <choose>
+                <when test="isSNS == true">
+                    `USER`.`ci` = #{userDTO.ci}
+                </when>
+                <otherwise>
+                    `USER`.`id` = #{userDTO.id}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <insert id="join_user" >
+        insert into `user` values(#{id}, #{ci}, #{password}, #{email}, #{tel}, #{imageFile.data}, now(), #{accessToken}, null, null)
+    </insert>
+
+    <insert id="insert_sns_info" parameterType="com.shop.dto.user.UserDTO">
+        INSERT INTO `sns_info` VALUES
+        (#{snsInfo.id}, #{id}, #{snsInfo.clientName}, now())
+    </insert>
+
+    <select id="fine_user_id">
+        select id from `user` where `tel`=#{phoneNum}
+    </select>
+
+    <!-- 찜하기 -->
+    <insert id="insert_wishlist">
+        insert into wishlist values(#{userId}, #{productNo})
+    </insert>
+
+
+</mapper>

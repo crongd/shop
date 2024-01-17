@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+</head>
+<style> /*side*/
+
+.side-bar {
+    display: inline-block;
+    width: 300px;
+    height: 100%;
+    /*overflow: auto;*/
+    position: fixed;
+    border: 1px solid black;
+    margin-right: 20px;
+}
+
+#logo {
+    display: inline-block;
+    /*box-sizing: border-box;*/
+    width: 100%;
+    height: 80px;
+    /*border: 1px solid black;*/
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz3-nwgWBW3TbiSHcjgqhLKo_bpIFbUAwOHw&usqp=CAU");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /*margin: 5px 10px;*/
+    margin: 10px 0;
+}
+
+#user-container {
+    display: inline-block;
+    width: 100%;
+    border: 1px solid black;
+    /*border-radius: 20px;*/
+    /*margin: 30px ;*/
+    padding: 30px 0;
+    box-sizing: border-box;
+}
+
+.user {
+    margin: 20px 0;
+    /*padding: 20px 0;*/
+}
+
+nav {
+    width: 300px;
+    height: 100%;
+    text-align: center;
+}
+
+#link {
+    list-style: none;
+}
+
+.category {
+    margin-top: 50px;
+    font-size: 1.5rem;
+    height: 80px;
+}
+
+.category > a {
+    text-decoration: none;
+    color: black;
+}
+
+
+</style>
+
+<body>
+    <aside class="side-bar" th:fragment="side-bar">
+        <nav>
+            <a href="#">
+                <div id="logo"></div>
+            </a>
+
+            <div id="user-container">
+                <a href="#" class="user">login</a> <br> <!--로그인 화면 get-->
+                <a href="#" class="user">join</a> <!--회원가입 화면 get-->
+            </div>
+
+            <ul id="link">
+                <li class="category"><a href="#">전체</a></li>
+                <li class="category"><i class="fa-solid fa-shirt"></i> <a href="#">의류</a></li>
+                <li class="category"><i class="fa-solid fa-tv"></i> <a href="#">가전</a></li>
+                <li class="category"><i class="fa-solid fa-car"></i> <a href="#">자동차용품</a></li>
+                <li class="category"><i class="fa-solid fa-cat"></i> <a href="#">반려동물</a></li>
+            </ul>
+
+        </nav>
+    </aside>
+</body>
+</html>

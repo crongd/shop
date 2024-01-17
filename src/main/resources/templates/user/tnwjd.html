@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보 / 주소지 수정</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        margin: 20px;
+        text-align: center;
+    }
+
+    main {
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+
+    td > label > input {
+        margin: 10px;
+        border: 1px solid black;
+        border-radius: 2px;
+        padding: 2px 5px;
+        background-color: white;
+    }
+
+    table {
+        width: 300px;
+        border-collapse: collapse;
+    }
+
+    .form-btn {
+        width: 45%;
+        margin: 15px 0;
+    }
+
+    tr > td:nth-child(1) {
+        text-align: center;
+    }
+
+
+
+    .selected {
+        text-align: center;
+        padding: 20px 0 0;
+    }
+
+    .select {
+        margin: 20px;
+    }
+
+    .user {
+        display: block;
+    }
+
+    .addr-container {
+        border: 1px solid black;
+        width: 80%;
+        height: 500px;
+        margin: 30px auto;
+    }
+
+    .join-icon {
+        text-align: right;
+        margin: 20px;
+    }
+
+    #join-icon {
+        background-color: darkgrey;
+        color: white;
+        cursor: pointer;
+    }
+
+    #join-icon:hover {
+        background-color: beige;
+        color: black;
+    }
+
+    
+    .addr {
+        display: none;
+        width: 100%;
+
+    }
+
+    .fa-plus {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 7px;
+        margin: 5px;
+    }
+
+    .addr-table tr td{
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .addr-table {
+        margin: 0 auto;
+        width: 90%;
+    }
+
+    #delete-icon {
+        display: inline-block;
+        border: 1px solid black;
+        border-radius: 10px;
+        color: white;
+        background-color: darkgrey;
+        padding: 10px 15px;
+        margin: 10px 0;
+        cursor: pointer;
+    }
+
+    #delete-icon:hover {
+        background-color: beige;
+        color: black;
+    }
+
+</style>
+<body>
+    <h1>회원 정보 수정</h1>
+    <hr>
+    <div class="selected">
+        <label class="select"><input type="radio" name="user" checked>회원정보 관리</label>
+        <label class="select"><input type="radio" name="user">회원 배송지 관리</label>
+    </div>
+    <main>
+        <section class="user">
+            <h2 style="text-align: center; margin: 20px">회원정보 수정</h2>
+            <form action="#">
+                <table>
+                    <tr>
+                        <!--이건 수정하면 안 되니까-->
+                        <td>ID  </td>
+                        <td><label><input id="id" type="text" disabled></label></td>
+                    </tr>
+                    <tr>
+                        <!--빈 칸이면 default로 기본 비밀번호를 넣어야하나? 근데 인코딩되서... 되나?-->
+                        <td>PW  </td>
+                        <td><label><input class="pw" type="password"></label></td>
+    <!--                    <td><button class="btn">수정</button></td>-->
+                    </tr>
+                    <tr>
+                        <!--하나만 적었으면 어쩌지? 하... 경우의 수가 너무 많네-->
+                        <td>PW 확인</td>
+                        <td><label><input class="pw" type="password"></label></td>
+                    </tr>
+                    <tr>
+                        <td>PHONE  </td>
+                        <td><label><input type="text"></label></td>
+                    </tr>
+                    <tr>
+                        <td>E-MAIL  </td>
+                        <td><label><input type="email"></label></td>
+                    </tr>
+                </table>
+                <input class="form-btn" type="button" value="취소">
+                <input class="form-btn" type="submit" value="수정하기">
+            </form>
+        </section> <!--회원정보 관리-->
+        <section class="addr">
+            <h2 style="text-align: center; margin: 10px">주소지 관리</h2>
+            <div class="addr-container">
+                <!--어차피 addr api 쓸꺼니까 팝업 띄우면 되겠지?-->
+                <div class="join-icon"><i id="join-icon" class="fa-solid fa-plus"></i></div>
+                <div>
+                    <table class="addr-table">
+                        <tr>
+                            <td>주소</td>
+                            <td>삭제</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>도로명 주소</span><br>
+                                <span>상세 주소</span>
+                            </td>
+                            <td><div id="delete-icon" ><i class="fa-solid fa-trash"></i></div></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+
+<script>
+    const [select1, select2] = document.querySelectorAll('input[type=radio]');
+    const [user, addr] = document.querySelectorAll('section');
+
+    select1.onchange = () => {
+        user.style.display='block';
+        addr.style.display='none';
+    }
+
+    select2.onchange = () => {
+        addr.style.display='block';
+        user.style.display='none';
+    }
+
+</script>
+
+
+
+
+
+
+

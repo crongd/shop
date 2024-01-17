@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>주소지 팝업</title>
+</head>
+<style>
+    .addr {
+        width: 500px;
+    }
+    button {
+        margin: 10px;
+        width: 500px;
+    }
+</style>
+<body>
+<h3>주소지 찾기</h3>
+<hr>
+<label>도로명 주소 <br><input type="text" class="addr"></label> <br>
+<label>상세 주소 <br><input type="text" class="addr"></label> <br>
+<button>등록</button>
+</body>
+</html>
+
+<script>
+    const btn = document.querySelector('button');
+    const [addr1, addr2] = document.querySelectorAll('input');
+    btn.onclick = () => {
+        opener.document.getElementById('addr1').value = addr1.value;
+        opener.document.getElementById('addr2').value = addr2.value;
+        window.close();
+    }
+</script>
