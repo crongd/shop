@@ -56,6 +56,7 @@ public class ProductController {
         }
     }
 
+    // 하위 카테고리 상품 조회
     @GetMapping("/category")
     @ResponseBody
     public List<ProductDTO> get_product_category_by_Child(@RequestParam(name = "cateNo") int cateNo) {

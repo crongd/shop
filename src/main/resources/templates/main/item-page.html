@@ -184,7 +184,8 @@
     </div>
     <hr>
     <form class="form-container">
-
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="csrf">
+        <input id="product-no" type="hidden" th:value="${product.no}">
         <section class="item-title-container">
             <img class="item-img" th:src="${product.mainImg}" alt="main-image"/>
             <div class="item-content">
@@ -197,10 +198,9 @@
                         <th:block th:if="${product.productOptions.size() != 0}">
                             <select name="option" class="option">
                                 <option hidden="hidden">선택</option>
-                                <option value="1" th:each="option : ${product.productOptions}" th:text="${option.name}">옵션1</option>
+                                <option th:value="${option.no}" th:each="option : ${product.productOptions}" th:text="${option.name}"></option>
                             </select>
                         </th:block>
-
     <!--                </label>-->
     <!--                <label class="option-container">-->
     <!--                    <select name="option2" class="option">-->
@@ -210,13 +210,13 @@
     <!--                        <option value="6">옵션6</option>-->
     <!--                    </select>-->
     <!--                </label>-->
-                    <br>
-                    <div class="remote-container">
-                        <button type="button" class="btn"><i class="fa-regular fa-heart"></i>찜!</button>
-                        <button type="button" class="btn" id="cart-btn"><i class="fa-solid fa-basket-shopping"></i>장바구니</button>
-                        <button type="button" class="btn"><i class="fa-regular fa-credit-card"></i>구매</button>
-                    </div>
-
+                        <br>
+                        <div class="remote-container">
+                            <button type="button" class="btn"><i class="fa-regular fa-heart"></i>찜!</button>
+                            <button type="button" class="btn" id="cart-btn"><i class="fa-solid fa-basket-shopping"></i>장바구니</button>
+                            <button type="button" class="btn"><i class="fa-regular fa-credit-card"></i>구매</button>
+                        </div>
+                    </label>
                 </div>
             </div>
         </section>
@@ -310,6 +310,12 @@
     // 상단 이동 스크롤 버튼 js
     const topBtn = document.querySelector('.top-btn');
     const cartBtn = document.querySelector('#cart-btn');
+    const formElem = document.forms.item(0);
+    const productNo = document.querySelector('#product-no');
+    // const productOption = document.querySelector('.option');
+    let productOption ;
+    const csrf = document.querySelector('#csrf');
+    // const optionName = productOption.querySelector('option').selected;
 
     window.onscroll = () => {
         if (scrollY < 300) {
@@ -319,9 +325,61 @@
         }
     }
 
-    cartBtn.onclick = () => {
 
+
+    // if (!document.querySelector('.option')) {
+    //     console.log('존재하지 않음')
+    //     let productOption = document.createElement('input');
+    //     productOption.value = null;
+    // } else {
+    //     console.log('존재해서 값 넣음')
+    //     productOption = document.querySelector('.option');
+    // }
+
+
+    cartBtn.onclick = () => {
+        try {
+            productOption = document.querySelector('.option').value;
+        }catch (e) {
+            productOption = null
+        }
+        console.log(csrf.value)
+        // if (productOption.value === undefined){
+        //     productOption.value = null;
+        // }
+        // console.log(optionName.valueOf())
+        // const formData = new FormData(formElem);
+        // console.log(formElem)
+        // console.log(productOption.value);
+        // console.log(productNo.value)
+        // formData.set()
+        // console.log(formData);
+        fetch(`/user/cart`, {
+            method: 'post',
+            headers: {"Content-Type":"application/json","X-Csrf-Token": csrf.value},
+            body: JSON.stringify({
+                "product": {
+                    "no":productNo.value,
+                    "productOptions":  [
+                        {"no" : productOption}
+                    ]
+                }
+            })
+        })
+            .then(response => {
+                if(response.redirected){
+                    alert('로그인이 필요함');
+                    location.href = response.url;
+                    return;
+                }
+
+                if (confirm('장바구니 추가했음. 보러가실?')) {
+                    location.href = response.url;
+                }
+
+            })
     }
+
 
 
 </script>

@@ -13,7 +13,7 @@ public interface UserMapper {
     // 유저 회원가입(모든정보(SNS정보 제외))
     void join_user(UserDTO userDTO);
 
-    UserDTO find_user(UserDTO userDTO, boolean isSNS);
+    UserDTO find_user(@Param("userDTO") UserDTO userDTO,@Param("isSNS") boolean isSNS);
 
     // 기존 회원가입 유저에 sns 정보 등록하기
     void insert_sns_info(UserDTO userDTO);

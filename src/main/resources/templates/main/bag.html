@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>장바구니</title>
@@ -172,36 +172,19 @@
                 <tr>
                     <th id="item-check">선택</th>
                     <th id="item-img">상품 이미지</th>
-                    <th id="item-content">제목 / 상품설명</th>
+                    <th id="item-content">제목</th>
                     <th id="item-price">가격</th>
                 </tr>
 
-                <tr style="border: 1px solid black">
+
+                <tr style="border: 1px solid black" th:each="product : ${products}">
                     <td class="item-check"><label><input type="checkbox"></label></td>
-                    <td style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg')"></td>
+                    <td><img th:src="${product.mainImg}" th:alt="메인사진"></td>
                     <td class="item-content">
-                        <h3 class="item-title">제목</h3> <br>
-                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                        <h3 class="item-title" th:text="${product.title}">제목</h3> <br>
                     </td>
                     <td class="item-price">
-                        <div>10,000원</div>
-                        <div class="item-count">
-                            <i class="fa-solid fa-minus"></i>
-                            <label><input type="number" min="1" value="1" readonly></label>
-                            <i class="fa-solid fa-plus"></i>
-                        </div>
-                    </td>
-                    <td class="item-remove"><a href="#"><i class="fa-solid fa-x x"></i></a></td>
-                </tr>
-                <tr style="border: 1px solid black">
-                    <td class="item-check"><label><input type="checkbox"></label></td>
-                    <td style="background-image: url('https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg')"></td>
-                    <td class="item-content">
-                        <h3 class="item-title">제목</h3> <br>
-                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
-                    </td>
-                    <td class="item-price">
-                        <div>10,000원</div>
+                        <div th:text="${product.price}">10,000원</div>
                         <div class="item-count">
                             <i class="fa-solid fa-minus"></i>
                             <label><input type="number" min="1" value="1" readonly></label>

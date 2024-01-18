@@ -1,5 +1,6 @@
 package com.shop.controller;
 
+import com.shop.dto.product.ProductDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
 import com.shop.service.UserCertificationService;
@@ -14,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -111,26 +114,43 @@ public class UserController {
     }
 
 
-    ///*******************************************
+    ///******************************************* 장바구니
 
     @GetMapping("/cart")
-    public String get_shopping_cart_page() {
+    public String get_shopping_cart_page(@AuthenticationPrincipal UserDTO userDTO, Model model) {
+//        userService.get_shopping_cart_by_user();
+
+//        List<ProductDTO> productList = userService.get_shopping_cart_by_user(userDTO);
+//        System.out.println(productList.size());
+
+//        model.addAttribute("products", productList);
         return "main/bag";
     }
 
 
 
     @PostMapping("/cart")
+    @ResponseBody
     public String add_shopping_cart(
             @AuthenticationPrincipal UserDTO userDTO,
-                    ShoppingCartDTO shoppingCartDTO
+            @RequestBody ShoppingCartDTO shoppingCartDTO
     ){
+        System.out.println(userDTO);
+        System.out.println(shoppingCartDTO);
+
 
         shoppingCartDTO.setUser(userDTO);
         userService.add_product_in_shopping_cart(shoppingCartDTO);
         // 유저 장바구니 창으로 이동시킨다
         return "redirect:/user/cart";
     }
+
+
+
+//    @GetMapping("/cart/{productNo}/{productOption}")
+//    public void insert_product_cart(@PathVariable int productNo, @PathVariable String productOption) {
+//
+//    }
 
 
 

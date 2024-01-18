@@ -10,12 +10,12 @@
 
     <!-- 장바구니에 상품 추가   -->
     <insert id="insert_shopping_cart" parameterType="com.shop.dto.shopping.ShoppingCartDTO">
-        INSERT INTO `shopping_cart` VALUES (NULL, #{user.id}, #{product.no}, #{amount})
+        INSERT INTO `shopping_cart` VALUES (NULL, #{user.id}, #{product.no}, 1)
     </insert>
 
     <!-- 장바구니의 한 상품의 옵션 추가   -->
     <insert id="insert_shopping_cart_option" parameterType="com.shop.dto.shopping.ShoppingCartDTO">
-        <selectKey keyProperty="no" order="BEFORE">
+        <selectKey keyProperty="no" order="BEFORE" resultType="int">
             SELECT LAST_INSERT_ID();
         </selectKey>
         INSERT INTO `shopping_cart_option` VALUES
@@ -23,5 +23,57 @@
             (NULL, #{no}, #{options.no})
         </foreach>
     </insert>
+
+
+    <!-- 유저정보로 장바구니 조회 -->
+<!--    <select id="get_shopping_cart_by_user" resultType="com.shop.dto.product.ProductDTO">-->
+<!--        SELECT p.*  FROM shopping_cart c-->
+<!--        left outer join shopping_cart_option co on c.no = co.shopping_cart_no-->
+<!--        inner join product p on c.product_no = p.no-->
+<!--        where c.user_id = #{id};-->
+<!--    </select>-->
+
+    <resultMap id="get_shopping_cart_result_map" type="com.shop.dto.shopping.ShoppingCartDTO" autoMapping="true">
+        <id property="no" column="sc_no" />
+        <result property="amount" column="c_amount" />
+        <association property="product" javaType="com.shop.dto.product.ProductDTO" >
+            <result property="title" column="p_title" />
+            <result property="price" column="p_price" />
+            <result property="deliveryPrice" column="p_de_price" />
+            <result property="mainImg" column="p_img" />
+
+            <collection property="productOptions" ofType="com.shop.dto.product.ProductOptionDTO" javaType="list" >
+                <id property="no" column="po_no" />
+                <result property="name" column="po_name" />
+            </collection>
+
+        </association>
+
+
+
+    </resultMap>
+
+
+    <select id="get_shopping_cart_by_user" resultMap="get_shopping_cart_result_map" >
+        SELECT
+        c.no as sc_no,
+        c.amount as c_amount,
+        po.no as po_no,
+        p.`title` as p_title,
+        p.`price` as p_price,
+        p.`delivery_price` as p_de_price,
+        p.`main_img` as p_img,
+        po.`name` as po_name
+        FROM shopping_cart c
+        left join shopping_cart_option co
+        on c.no = co.shopping_cart_no
+        inner join product p
+        on c.product_no = p.no
+        left outer join product_option po
+        on co.product_option_no = po.no
+        where c.user_id = #{id}
+    </select>
+
+
 
 </mapper>
