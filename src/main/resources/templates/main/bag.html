@@ -217,10 +217,10 @@
             <div class="buy-title">구매목록</div>
 <!--            <div th:text="${products.}"></div>-->
             <div class="buy-container">
-                <div class="buy-content"><span>상품금액</span><span id="price" th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price]), 0, 'COMMA')} + '원'">1450</span></div>
+                <div class="buy-content"><span>상품금액</span><span id="price" th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]), 0, 'COMMA')} + '원'">1450</span></div>
                 <div class="buy-content"><span>배 송 비 </span><span>+ 3000원</span></div>
                 <hr style="margin: 30px 0">
-                <div class="buy-content"><span>결제 예정 금액 </span><span th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price])+3000, 0, 'COMMA')} + '원'">123</span></div>
+                <div class="buy-content"><span>결제 예정 금액 </span><span th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]) + 3000, 0, 'COMMA')} + '원'">123</span></div>
             </div>
             <button class="buy-bth">구매하기</button>
         </section>
