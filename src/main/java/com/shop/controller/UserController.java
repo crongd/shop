@@ -6,8 +6,10 @@ import com.shop.dto.user.UserDTO;
 import com.shop.service.UserCertificationService;
 import com.shop.service.UserMailService;
 import com.shop.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +32,7 @@ public class UserController {
     private final UserMailService userMailService;
 
     @GetMapping("/login")
-    public void user_get_login() {
-
-    }
+    public void user_get_login() {}
 
     @GetMapping("/join")
     public void user_join() {}
@@ -40,6 +40,13 @@ public class UserController {
 
     @GetMapping("/find")
     public void user_find() {}
+
+    @GetMapping("/logout")
+    public String user_logout(@AuthenticationPrincipal UserDTO userDTO, HttpSession session) {
+        System.out.println(userDTO);
+        session.invalidate();
+        return "redirect:/";
+    }
 
     @PostMapping("/join")
     public String user_post_join(@Validated UserDTO userDTO, BindingResult result) {
@@ -118,12 +125,13 @@ public class UserController {
 
     @GetMapping("/cart")
     public String get_shopping_cart_page(@AuthenticationPrincipal UserDTO userDTO, Model model) {
+//        System.out.println(userDTO);
 //        userService.get_shopping_cart_by_user();
 
-//        List<ProductDTO> productList = userService.get_shopping_cart_by_user(userDTO);
-//        System.out.println(productList.size());
+        List<ShoppingCartDTO> productList = userService.get_shopping_cart_of_user(userDTO);
+        System.out.println(productList.size());
 
-//        model.addAttribute("products", productList);
+        model.addAttribute("products", productList);
         return "main/bag";
     }
 
@@ -143,6 +151,26 @@ public class UserController {
         userService.add_product_in_shopping_cart(shoppingCartDTO);
         // 유저 장바구니 창으로 이동시킨다
         return "redirect:/user/cart";
+    }
+
+    @PatchMapping("/cart")
+    @ResponseBody
+    public void change_product_amount_shopping_cart(@AuthenticationPrincipal UserDTO userDTO,
+                                                    @RequestBody ShoppingCartDTO shoppingCartDTO) {
+        System.out.println("/patch!@!");
+        System.out.println(shoppingCartDTO);
+        shoppingCartDTO.setUser(userDTO);
+        userService.update_shopping_cart_product_amount(shoppingCartDTO);
+//        return "redirect:/";
+    }
+
+    @DeleteMapping("/cart")
+    @ResponseBody
+    public void delete_product_of_shopping_cart(@AuthenticationPrincipal UserDTO userDTO,
+                                                @RequestBody ShoppingCartDTO shoppingCartDTO) {
+        System.out.println(shoppingCartDTO);
+        shoppingCartDTO.setUser(userDTO);
+        userService.delete_product_in_shopping_cart(shoppingCartDTO);
     }
 
 

@@ -42,6 +42,7 @@ public class UserService {
     private final RestOperations restOperations;
 
 
+    // 회원가입
     public void join_user(UserDTO userDTO) {
         // encoding
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -65,6 +66,24 @@ public class UserService {
 ////        return shoppingCartMapper.get_shopping_cart_by_user(userDTO);
 //    }
 
+
+    // 유저의 장바구니 정보 가져오기
+    public List<ShoppingCartDTO> get_shopping_cart_of_user(UserDTO userDTO) {
+        return shoppingCartMapper.get_shopping_cart_by_user(userDTO);
+    }
+
+    // 장바구니 amount 수정
+    public void update_shopping_cart_product_amount(ShoppingCartDTO shoppingCartDTO) {
+        shoppingCartMapper.change_product_amount(shoppingCartDTO);
+    }
+
+    public void delete_product_in_shopping_cart(ShoppingCartDTO shoppingCartDTO) {
+//        shoppingCartDTOS.forEach(shoppingCartDTO -> {
+//            shoppingCartDTO.setUser(userDTO);
+//        });
+
+        shoppingCartMapper.delete_product(shoppingCartDTO);
+    }
 
 
 

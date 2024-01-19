@@ -24,6 +24,15 @@
         </foreach>
     </insert>
 
+    <!-- 장바구니에 상품 개수 수정 -->
+    <update id="change_product_amount" >
+        update shopping_cart set amount = #{amount} where user_id=#{user.id} and no=#{no};
+    </update>
+
+    <!-- 장바구니에 상품 제거 -->
+    <delete id="delete_product" >
+        delete from shopping_cart where user_id=#{user.id} and no=#{no}
+    </delete>
 
     <!-- 유저정보로 장바구니 조회 -->
 <!--    <select id="get_shopping_cart_by_user" resultType="com.shop.dto.product.ProductDTO">-->
@@ -37,6 +46,7 @@
         <id property="no" column="sc_no" />
         <result property="amount" column="c_amount" />
         <association property="product" javaType="com.shop.dto.product.ProductDTO" >
+            <id property="no" column="p_no" />
             <result property="title" column="p_title" />
             <result property="price" column="p_price" />
             <result property="deliveryPrice" column="p_de_price" />
@@ -59,6 +69,7 @@
         c.no as sc_no,
         c.amount as c_amount,
         po.no as po_no,
+        p.no as p_no,
         p.`title` as p_title,
         p.`price` as p_price,
         p.`delivery_price` as p_de_price,

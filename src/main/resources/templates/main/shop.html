@@ -37,8 +37,8 @@
         margin: 10px 0;
     }
 
-    #user-container {
-        display: inline-block;
+    .user-container {
+        display: flex;
         width: 100%;
         /*border: 1px solid black;*/
         /*border-radius: 20px;*/
@@ -47,12 +47,13 @@
         box-sizing: border-box;
         border-bottom: 1px solid black;
         border-top: 1px solid black;
+        justify-content: space-around;
     }
 
-    #user-container > a {
+    .user-container > a {
         color: white;
         text-decoration: none;
-        margin: 0 20px;
+        /*margin: 0 20px;*/
         padding: 7px;
         border: 1px solid white;
         border-radius: 10px;
@@ -284,10 +285,16 @@
             <div id="logo"></div>
         </a>
 
-        <div id="user-container">
+        <div class="user-container" th:if="${#authentication.principal} == anonymousUser">
             <a href="/user/login" class="user">로그인</a> <!--로그인 화면 get-->
             <a href="/user/join" class="user">회원가입</a> <!--회원가입 화면 get-->
         </div>
+        <div class="user-container" th:if="${#authentication.principal} != anonymousUser">
+            <a href="">마이페이지</a>
+            <a href="/user/cart">장바구니</a>
+            <a href="/user/logout">로그아웃</a>
+        </div>
+
         <div>
             <input type="hidden" class="category-value" value="0">
             <input type="hidden" class="category-value" value="1">
@@ -339,7 +346,8 @@
         <span></span>
     </div>
 
-    <th:block th:text="${#authentication}"></th:block>
+    <th:block th:if="${#authentication.principal} == anonymousUser" th:text="${#authentication.principal}"></th:block>
+
 
     <!--loading target-->
 </main>

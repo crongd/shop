@@ -14,4 +14,8 @@ public interface ShoppingCartMapper {
     void insert_shopping_cart_option(ShoppingCartDTO shoppingCartDTO);
 
     List<ShoppingCartDTO> get_shopping_cart_by_user(UserDTO userDTO);
+
+    void change_product_amount(ShoppingCartDTO shoppingCartDTO);
+
+    void delete_product(ShoppingCartDTO shoppingCartDTO);
 }
