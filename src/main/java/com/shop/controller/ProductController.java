@@ -59,9 +59,11 @@ public class ProductController {
     // 하위 카테고리 상품 조회
     @GetMapping("/category")
     @ResponseBody
-    public List<ProductDTO> get_product_category_by_Child(@RequestParam(name = "cateNo") int cateNo) {
+    public List<ProductDTO> get_product_category_by_Child(@RequestParam(name = "cateNo") int cateNo,
+                                                          @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                                                          @RequestParam(name = "order") String order) {
         System.out.println(cateNo);
-        return productService.get_product_by_category(cateNo);
+        return productService.get_product_by_category(cateNo, searchWord, order);
     }
 
 

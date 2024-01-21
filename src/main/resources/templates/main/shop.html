@@ -227,8 +227,10 @@
     }
 
     .dropdown-select {
+        display: flex;
         text-align: right;
         padding: 10px 20px;
+        align-items: center;
     }
 
 
@@ -274,6 +276,12 @@
         word-break: keep-all;
     }
 
+    container {
+        display: flex;
+        justify-content: right;
+        flex-direction: row;
+    }
+
 </style>
 
 <body>
@@ -315,22 +323,24 @@
 
 
 <main>
-    <input type="hidden" id="now-category">
+    <input type="hidden" id="now-category" value="0">
 
-    <h2 class="title">타이틀</h2>
-    <div class="search-container">
-        <label><input id="search-input" type="text" placeholder="검색어" style="width:200px;height:30px;"></label>
-        <button id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </div>
-    <div class="dropdown-select">
-        <label>
-            <select name="" id="">
-                <option value="popular">인기순</option>
-                <option value="recent">최신순</option>
-                <option value="price">가격순</option>
-            </select>
-        </label>
-    </div>
+    <h2 class="title">쇼핑몰</h2>
+    <container>
+        <div class="dropdown-select">
+            <label>
+                <select name="" id="">
+                    <option value="popular">인기순</option>
+                    <option value="recent">최신순</option>
+                    <option value="price">가격순</option>
+                </select>
+            </label>
+        </div>
+        <div class="search-container">
+            <label><input id="search-input" type="text" placeholder="검색어" style="width:200px;height:30px;"></label>
+            <button id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </container>
     <div class="category-list">
         <ul class="category-list-ul">
         </ul>
@@ -404,11 +414,24 @@
     const categoryContainer = document.querySelector('.category-list-ul');
 
     searchBtn.onclick = () => {
-        product_select(nowCategory.value);
+        if (nowCategory.value < 5) {
+            product_select(nowCategory.value)
+        }  else {
+            product_by_category(nowCategory.value)
+        }
+        searchInput.innerHTML = "";
     }
 
     // 첫페이지에 무조건 실행
     product_select(0);
+
+    select.onchange = () => {
+        if (nowCategory.value < 5) {
+            product_select(nowCategory.value)
+        }  else {
+            product_by_category(nowCategory.value)
+        }
+    }
 
     // 전체 atag 클릭시 전체 내용
     all.onclick = () => {
@@ -448,10 +471,10 @@
     // 반려동물에 대한 모든 정보가 나오도록
     pet.onclick = () => {
         console.log(petVal.value)
+        product_select_category(petVal.value)
         product_select(petVal.value)
         nowCategory.value = 4;
         window.scrollTo(0,0);
-        product_select_category(petVal.value)
     }
 
 
@@ -468,9 +491,13 @@
 
 
     function product_by_category(cateNo) {
-        fetch(`/product/category?cateNo=${cateNo}`)
+        fetch(`/product/category?cateNo=${cateNo}&searchWord=${searchInput.value}&order=${select.value}`)
             .then(response => {return response.json()})
             .then(list => {
+                // console.log(list.length);
+                if (list.length === 0) {
+
+                }
                 productList.innerHTML = "";
                 for (product of list) {
                     productList.insertAdjacentHTML('beforeend',

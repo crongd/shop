@@ -93,7 +93,24 @@
     </select>
 
     <select id="get_product_by_category" resultType="com.shop.dto.product.ProductDTO" >
-        select * from product where category_no = #{cateNo}
+        select * from product p
+        <where>
+            category_no = #{cateNo}
+            <if test="searchWord != null">
+                and p.title LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
+        <choose>
+            <when test="order == 'price'">
+                order by p.price
+            </when>
+            <when test="order == 'recent'">
+                order by p.write_date
+            </when>
+            <when test="order == 'popular'">
+                order by p.title
+            </when>
+        </choose>
     </select>
 
 <!--    product.price, 0, 'COMMA'-->

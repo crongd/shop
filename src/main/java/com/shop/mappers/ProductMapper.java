@@ -19,7 +19,7 @@ public interface ProductMapper {
 
     List<Category> get_categories(int cateNo);
 
-    List<ProductDTO> get_product_by_category(int cateNo);
+    List<ProductDTO> get_product_by_category(@Param("cateNo")int cateNo,@Param("searchWord") String searchWord, @Param("order") String order);
 
 
     List<ProductDTO> get_big_category(@Param("no") int no, @Param("searchWord") String searchWord, @Param("order") String order);

@@ -29,8 +29,8 @@ public class ProductService {
         return productMapper.get_categories(cateNo);
     }
 
-    public List<ProductDTO> get_product_by_category(int cateNo) {
-        return productMapper.get_product_by_category(cateNo);
+    public List<ProductDTO> get_product_by_category(int cateNo, String searchWord, String order) {
+        return productMapper.get_product_by_category(cateNo, searchWord, order);
     }
 
     public List<Category> get_category_of_product(Category category) {

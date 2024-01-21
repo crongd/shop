@@ -28,6 +28,9 @@ class ShoppingMallApplicationTests {
     @Test
     void contextLoads() {
 //        ProductDTO aa = productMapper.get_product_by_no(500);
+
+
+//        System.out.println(productMapper.get_product_by_category(7, "price"));
 //
 //        System.out.println(aa);
 //
