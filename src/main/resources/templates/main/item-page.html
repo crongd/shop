@@ -175,10 +175,17 @@
         margin: 10px 0 0;
     }
 
+    #main-logo {
+        width: 30%;
+        height: 150px;
+    }
+
+
 
 </style>
 <body>
-    <h1>상품 상세 페이지</h1>
+    <a href="/"><img id="main-logo" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDNfMTAg/MDAxNTgwNzEwMzY5MjM0.hlBG7FOVi0fIA6WURszqg0T_eK3hun4H9uv2iByqpPUg.br7UJh8oWuzJ6ToXXwMaZQ7wWVezvCYUq1nUwWKPuXkg.PNG.louders33/1_04.png?type=w800" alt="main-logo"></a>
+<!--    <h1>상품 상세 페이지</h1>-->
     <div class="item-category">
         <span th:each="category : ${categories}" th:text="${category.name} + ' | '"></span>
 
