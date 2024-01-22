@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8"ㄴ>
     <title>item page</title>
     <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
 </head>
@@ -19,6 +19,7 @@
     .item-title-container {
         display: flex;
         justify-content: center;
+        margin: 20px 0;
     }
 
     .item-content {
@@ -175,22 +176,27 @@
         margin: 10px 0 0;
     }
 
+    .main-logo {
+        display: block;
+        text-align: center;
+    }
+
     #main-logo {
         width: 30%;
-        height: 150px;
+        height: 120px;
     }
+
+
 
 
 
 </style>
 <body>
-    <a href="/"><img id="main-logo" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDNfMTAg/MDAxNTgwNzEwMzY5MjM0.hlBG7FOVi0fIA6WURszqg0T_eK3hun4H9uv2iByqpPUg.br7UJh8oWuzJ6ToXXwMaZQ7wWVezvCYUq1nUwWKPuXkg.PNG.louders33/1_04.png?type=w800" alt="main-logo"></a>
+    <a class="main-logo" href="/"><img id="main-logo" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDNfMTAg/MDAxNTgwNzEwMzY5MjM0.hlBG7FOVi0fIA6WURszqg0T_eK3hun4H9uv2iByqpPUg.br7UJh8oWuzJ6ToXXwMaZQ7wWVezvCYUq1nUwWKPuXkg.PNG.louders33/1_04.png?type=w800" alt="main-logo"></a>
 <!--    <h1>상품 상세 페이지</h1>-->
     <div class="item-category">
         <span th:each="category : ${categories}" th:text="${category.name} + ' | '"></span>
-
     </div>
-    <hr>
     <form class="form-container">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="csrf">
         <input id="product-no" type="hidden" th:value="${product.no}">

@@ -508,7 +508,7 @@
                             <div class="product-title">${product['title']}</div>
                             <div style="margin: 10px 0">
                                 <span>&#8361;</span>
-                                <span>${product['price']}</span>
+                                <span>${product['price'].toLocaleString('ko-KR')}</span>
                             </div>
                         </div>
                     </a>
@@ -528,6 +528,7 @@
             .then(list => {
                 productList.innerHTML = "";
                 for (product of list) {
+                    let price = product['price'].toLocaleString('ko-KR');
                     productList.insertAdjacentHTML('beforeend',
                         `<li class="goods">
                     <a href="/product/${product['no']}" class="goods-link">
@@ -536,7 +537,7 @@
                             <div class="product-title">${product['title']}</div>
                             <div style="margin: 10px 0">
                                 <span>&#8361;</span>
-                                <span>${product['price']}</span>
+                                <span>${product['price'].toLocaleString('ko-KR')}</span>
                             </div>
                         </div>
                     </a>

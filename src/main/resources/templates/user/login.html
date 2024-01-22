@@ -56,7 +56,7 @@
 
         <input type="submit" id="joinBtn" value="로그인"> <br>
         <input type="button" value="ID/PW 찾기" onclick="location.href ='/user/find'" >
-        <input type="button" value="회원가입">
+        <input type="button" value="회원가입" onclick="location.href='/user/join'">
         <br>
         <a th:href="@{/oauth2/authorization/kakao}"><img th:src="@{/image/login/kakao-login-logo.png}" src="../../static/image/login/kakao-login-logo.png" alt="kakao-login"/></a>
         <a th:href="@{/oauth2/authorization/google}"><img style="width: 183px; height: 45px" th:src="@{/image/login/google-login-logo.png}" src="../../static/image/login/google-login-logo.png" alt="google-login"/></a>
