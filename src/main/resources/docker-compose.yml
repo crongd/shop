@@ -9,7 +9,7 @@ services:
       - '81:81'
     environment:
       TZ: "Asia/Seoul"
-      DB_MYSQL_HOST: "61.97.187.19"
+      DB_MYSQL_HOST: "49.50.167.223"
       DB_MYSQL_PORT: 3306
       DB_MYSQL_USER: "webuser"
       DB_MYSQL_PASSWORD: "1234"

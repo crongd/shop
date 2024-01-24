@@ -150,7 +150,7 @@ public class UserController {
         shoppingCartDTO.setUser(userDTO);
         userService.add_product_in_shopping_cart(shoppingCartDTO);
         // 유저 장바구니 창으로 이동시킨다
-        return "redirect:/user/cart";
+        return "redirect:user/cart";
     }
 
     @PatchMapping("/cart")
