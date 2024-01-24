@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"ㄴ>
+    <meta charset="UTF-8">
     <title>item page</title>
     <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
 </head>
@@ -48,8 +48,8 @@
     }
 
     .option-container {
-        display: flex;
-        justify-content: center;
+        /*display: flex;*/
+        /*justify-content: center;*/
         margin: 20px 0;
     }
 
@@ -215,6 +215,7 @@
                                 <option th:value="${option.no}" th:each="option : ${product.productOptions}" th:text="${option.name}"></option>
                             </select>
                         </th:block>
+                        <br>
     <!--                </label>-->
     <!--                <label class="option-container">-->
     <!--                    <select name="option2" class="option">-->
