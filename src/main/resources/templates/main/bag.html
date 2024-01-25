@@ -206,7 +206,7 @@
 
                         <tr class="product" style="border: 1px solid black" th:each="cart : ${products}">
                             <td class="item-check"><label><input class="check" type="checkbox" th:value="${cart.product.price}"></label></td>
-                            <input type="hidden" th:name="no" th:value="${cart.no}">
+                            <input type="hidden" class="cart-no" th:name="no" th:value="${cart.no}">
                             <td><a th:href="@{|/product/${cart.product.no}|}"><img th:src="${cart.product.mainImg}" th:alt="메인사진"></a></td>
                             <td class="item-content">
                                 <a th:href="@{|/product/${cart.product.no}|}"><h3 class="item-title" th:text="${cart.product.title}">제목</h3></a> <br>
@@ -237,7 +237,7 @@
                     <hr style="margin: 30px 0">
                     <div class="buy-content"><span>결제 예정 금액 </span><span th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]) + 3000, 0, 'COMMA')} + '원'">123</span></div>
                 </div>
-                <button class="buy-bth">구매하기</button>
+                <button class="buy-bth" id="order-btn">구매하기</button>
             </section>
         </th:block>
     </article>
@@ -249,10 +249,52 @@
     // check input 배열
     const products = document.querySelectorAll('.product');
     const csrfToken = document.querySelector('meta[name=_csrf]').content;
+    const orderBtn = document.querySelector('#order-btn');
     console.log(csrfToken);
 
+    orderBtn.onclick = () => {
+        const form = get_order_products(true);
+        document.body.appendChild(form);
+        form.action = '';
+        form.method = 'post';
+
+        form.submit();
+
+        // fetch(`/order`, {
+        //     method: 'post',
+        //     headers: {"X-Csrf-Token": csrfToken},
+        //     body: formData
+        // }).then(resp => {
+        //     console.log(resp)
+        //     if (resp.ok) {
+        //         location.href = "/order";
+        //     } else {
+        //         alert('주문정보 에러')
+        //     }
+        // })
+    }
 
 
+    function get_order_products(isAll) {
+       const form = document.createElement('form');
+        [...products].forEach(product => {
+            if (isAll || product.querySelector('.check').checked) {
+                const newInput = document.createElement('input');
+                newInput.name = 'no';
+                newInput.value = product.querySelector('.cart-no').value;
+                form.appendChild(newInput);
+                // console.log('if안으로 들어옴')
+                // console.log(cartNoList)
+            }
+        })
+
+        const csrfInput = document.createElement('input');
+        csrfInput.name = '_csrf';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        return form;
+    }
 
 
 

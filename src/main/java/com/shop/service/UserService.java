@@ -69,7 +69,7 @@ public class UserService {
 
     // 유저의 장바구니 정보 가져오기
     public List<ShoppingCartDTO> get_shopping_cart_of_user(UserDTO userDTO) {
-        return shoppingCartMapper.get_shopping_cart_by_user(userDTO);
+        return shoppingCartMapper.get_shopping_cart_by_user(userDTO, null);
     }
 
     // 장바구니 amount 수정

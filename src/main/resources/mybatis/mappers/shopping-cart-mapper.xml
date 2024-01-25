@@ -5,7 +5,10 @@
 
     <!-- 해당 유저의 장바구니 모든 정보 가져오기   -->
     <select id="get_shopping_cart" resultType="com.shop.dto.shopping.ShoppingCartDTO">
-        SELECT * FROM `shopping_cart` WHERE `user_id` = #{id}
+        SELECT * FROM `shopping_cart` WHERE `user_id` = #{user.id}
+        <if test="orderNums != null" >
+
+        </if>
     </select>
 
     <!-- 장바구니에 상품 추가   -->
@@ -82,7 +85,13 @@
         on c.product_no = p.no
         left outer join product_option po
         on co.product_option_no = po.no
-        where c.user_id = #{id}
+        where c.user_id = #{user.id}
+        <if test="orderNums != null" >
+            and c.no in
+            <foreach collection="orderNums" open="(" close=")" item="no" separator="," >
+                #{no}
+            </foreach>
+        </if>
     </select>
 
 

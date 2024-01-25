@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>주문페이지</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
 </head>
 <style>
     * {
@@ -106,6 +107,11 @@
         text-align: left;
     }
 
+    .main-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
 
 </style>
 <body>
@@ -120,22 +126,21 @@
 
     <hr>
 
-    <main>
-        <h1 style="text-align: center">주문</h1>
-        <hr>
+    <h1 style="text-align: center">주문</h1>
+    <main class="main-container">
         <section>
             <table>
-                <tr>
+                <tr style="height: 14px">
                     <th colspan="5">구매 목록</th>
                 </tr>
-                <tr>
+                <tr style="height: 14px">
                     <th id="item-check">선택</th>
                     <th id="item-img">상품 이미지</th>
                     <th id="item-content">제목 / 상품설명</th>
                     <th id="item-price">가격 / 수량</th>
                 </tr>
 
-                <tr style="border: 1px solid black">
+                <tr style="border: 1px solid black; height: 50px">
                     <td class="item-check"><label><input type="checkbox"></label></td>
                     <td style="background-image: url('https://www.boardlife.co.kr/wys2/file_attach/2015/10/14/1444752096-91.jpg')"></td>
                     <td class="item-content">
@@ -175,10 +180,11 @@
                 <label>휴대폰번호 <input type="text"></label> <br>
                 배송지 <button id="addr">찾기</button>
                 <br>
-                <label><input type="text" class="addr"></label> <br>
-                <label><input type="text" class="addr"></label>
+                <label><input type="text" id="post-addr" placeholder="우편번호" readonly></label> <br>
+                <label><input type="text" id="addr1" class="addr" placeholder="주소" readonly></label> <br>
+                <label><input type="text" id="addr2" class="addr" placeholder="상세주소"></label>
                 <br>
-                <label>배송요청사항 <br><textarea cols="80" rows="7" placeholder="배송요청 사항은 결제 필수 정보로 처리하지 않았습니다. 배송지도 readonly로 설정해 팝업에서 반드시 수행하게 하려 했으나 팝업 연결 불가로 생략했습니다."></textarea></label> <br>
+                <label>배송 요청사항 <br><textarea cols="80" rows="7" placeholder="배송요청사항"></textarea></label> <br>
 
                 <span>결제수단</span>
                 <br>
@@ -222,14 +228,14 @@
         <div>
         </div>
     </main>
-    <footer>
-        <hr>
-        <div class="footer-container">
-            <div>→ 온라인상담: daegu-koreaislab.co.kr</div>
-            <div>→ 전화문의: ☎ 053-710-5926</div>
-            <div>→ 오시는 길: https://map.naver.com/v5/entry/place/1199413968</div>
-        </div>
-    </footer>
+<!--    <footer>-->
+<!--        <hr>-->
+<!--        <div class="footer-container">-->
+<!--            <div>→ 온라인상담: daegu-koreaislab.co.kr</div>-->
+<!--            <div>→ 전화문의: ☎ 053-710-5926</div>-->
+<!--            <div>→ 오시는 길: https://map.naver.com/v5/entry/place/1199413968</div>-->
+<!--        </div>-->
+<!--    </footer>-->
 
 
 <!--헤더-->
@@ -252,6 +258,10 @@
     const [payDiv1] = document.getElementsByClassName('pay1');
     const [payDiv2] = document.getElementsByClassName('pay2');
 
+    const postAddr = document.getElementById('post-addr'); // 우편번호
+    const mainAddr = document.getElementById('addr1'); // 주소
+    const detailAddr = document.getElementById('addr2'); // 상세주소
+
     pay1.onchange = () => {
         payDiv1.style.display='block';
         payDiv2.style.display='none';
@@ -265,8 +275,48 @@
 
     // 주소지 팝업
     addrBtn.onclick= () => {
-        console.log('주소 클릭')
-        window.open('http://localhost:63342/shop/src/main/resources/templates/main/addr.html?_ijt=geb31t70659hjisalgl8tdl2pt&_ij_reload=RELOAD_ON_SAVE', '주소찾기', 'width=550, height=250, left=300, top=400 scrollbars=0, toolbar=0, menubar=no')
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+                // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다. (참고항목은 지금 사용하지 않음)
+                    // document.getElementById("sample6_extraAddress").value = extraAddr;
+                } else {
+                    // document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                postAddr.value = data.zonecode; //우편번호 넣기
+                mainAddr.value = addr; // 주소 넣기
+                // 커서를 상세주소 필드로 이동한다.
+                detailAddr.focus(); // 상세주소 필드로 커서를 이동(바로 입력하기 위한 편의성)
+            }
+        }).open();
     }
 
     // 취소버튼 클릭 (전 페이지로?)
@@ -286,6 +336,8 @@
             alert('결제 필수 정보가 비어있다');
         }
     }
+
+
 
 
 </script>
