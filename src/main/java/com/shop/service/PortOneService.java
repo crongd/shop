@@ -7,6 +7,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
 
@@ -108,17 +110,20 @@ public class PortOneService {
 
     // 결제 내역 단건 조회 (+결제 요청 후, 사후 검증)
     // imp_uid => PORT_ONE에 등록된 고유한 결제 번호
-    public void get_inquery_order(String imp_uid) {
+    public Map<Boolean, ? extends Object> get_inquery_order(String imp_uid) {
         Map<String, String> bodyData = Map.of(
                 "imp_uid", imp_uid
         );
 
-        // get 요청으로 변경해야함.
-        RequestEntity<String> requestEntity = RequestEntity
-                .post(PORTONE_PAYMENTS_PREPARE_URL, imp_uid)
+        UriComponents uriComponents = UriComponentsBuilder.fromUriString(PORTONE_PAYMENTS_INQUERY_URL)
+                .uriVariables(Map.of("imp_uid", imp_uid))
+                .encode().build();
+
+        RequestEntity<Void> requestEntity = RequestEntity
+                .get(uriComponents.toUri())
                 .header("Authorization", "Bearer " + get_access_token())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(JSONObject.toJSONString(bodyData));
+                .build();
+
 
         ResponseEntity<JSONObject> response = restOperations.exchange(requestEntity, JSONObject.class);
         System.out.println(response);
@@ -127,16 +132,14 @@ public class PortOneService {
         String message = (String) responseBody.get("message");
         System.out.println(code);
         // code가 0이면 성공임
-        if (code == 0) {
-
+        if(code == 0){
+            Map responseData = (Map) responseBody.get("response");
+            return Map.of(true, responseData);
+        }else{
+//            String message = (String) responseBody.get("message");
+            return Map.of(false, message);
         }
 
-        System.out.println(message);
-        // 메세지 없음
-        
-        Map responseData = (Map) responseBody.get("response");
-        // responseData를 검증한 후, db에 저장하는 과정을 거쳐야 함.
-        System.out.println(responseData);
 
 
 

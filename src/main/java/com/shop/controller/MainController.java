@@ -18,5 +18,10 @@ public class MainController {
         return "main/shop";
     }
 
+    @GetMapping("/test")
+    public String test_page() {
+        return "test";
+    }
+
 
 }

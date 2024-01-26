@@ -6,12 +6,15 @@ import com.shop.dto.user.UserDTO;
 import com.shop.mappers.OrderMapper;
 import com.shop.mappers.ShoppingCartMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class OrderService {
 
     public void get_order(int orderNo, UserDTO userDTO) {
         orderMapper.get_order(OrderDTO.builder()
-                .no(orderNo)
+//                .no(orderNo)
                 .user(userDTO)
                 .build());
     }
@@ -32,26 +35,31 @@ public class OrderService {
     }
 
     @Transactional
-    public void create_order(List<Integer> orderNum, UserDTO userDTO) {
-        orderMapper.create_order(userDTO);
+    public boolean create_order(UserDTO userDTO, Map orderDataMap, List<Integer> cartNumbers) {
+        OrderDTO orderDTO = OrderDTO.builder()
+                .user(userDTO)
+                .shoppingCarts(cartNumbers.parallelStream()
+                        .map(number -> ShoppingCartDTO.builder().no(number).build())
+                        .toList()
+                )
+                .createdDate(LocalDateTime.now())
+                .addr((String) orderDataMap.get("addr"))
+                .impUid((String)orderDataMap.get("imp_uid"))
+                .postCode((String)orderDataMap.get("post_code"))
+                .amount((Integer) orderDataMap.get("amount"))
+                .currency((Integer)orderDataMap.get("currency"))
+                .startedAt((Integer)orderDataMap.get("started_at")) // 여기 timestamp로 수정해야함
+                .cardQuota((Integer)orderDataMap.get("card_quota"))
+                .payMethod((String)orderDataMap.get("pay_method"))
+                .pgProvider((String)orderDataMap.get("pg_provider"))
+                .cardType((Integer)orderDataMap.get("card_type"))
+                .cardName((String)orderDataMap.get("card_name"))
+                .cardNumber((String)orderDataMap.get("card_number"))
+                .pgId((String)orderDataMap.get("pg_id"))
+                .build();
 
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setUser(userDTO);
-        List<ShoppingCartDTO> shoppingCartDTOS = new ArrayList<>();
+        return true;
 
-        orderDTO.setShoppingCarts(new ArrayList<>());
-        orderNum.forEach(number -> {
-            orderDTO.getShoppingCarts().add(ShoppingCartDTO.builder().no(number).build());
-//            ShoppingCartDTO shoppingCartDTO = new ShoppingCartDTO();
-//            shoppingCartDTO.setNo(number);
-
-//            shoppingCartDTOS.add(shoppingCartDTO);
-        });
-//        orderDTO.setShoppingCarts(shoppingCartDTOS);
-
-//        System.out.println("insert_user_order 들어옴");
-
-        orderMapper.create_order_cart(orderDTO);
     }
 
 

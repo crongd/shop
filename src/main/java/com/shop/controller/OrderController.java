@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -65,11 +66,26 @@ public class OrderController {
     @ResponseBody
     @GetMapping("/payment/{imp_uid}")
     public ResponseEntity<String> get_inquery_order(
-            @PathVariable("imp_uid") String imp_uid
+            @AuthenticationPrincipal UserDTO userDTO,
+            @PathVariable("imp_uid") String imp_uid,
+            @RequestParam("no") List<Integer> cartNumbers
     ) {
-        portOneService.get_inquery_order(imp_uid);
+        Map<Boolean, ? extends Object> resultOb =  portOneService.get_inquery_order(imp_uid);
+        boolean result = resultOb.keySet().iterator().next();
 
-        return null;
+        if (result) {
+            // db에 저장~
+            Map response = (Map) resultOb.get(result);
+            orderService.create_order(userDTO, response, cartNumbers);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        // 값 가져오기 실패
+        String message = "";
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+
+//        return result ? ResponseEntity.status(HttpStatus.OK).body(null) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+
+//        return null;
     }
 
 
