@@ -253,9 +253,9 @@
     console.log(csrfToken);
 
     orderBtn.onclick = () => {
-        const form = get_order_products(true);
+        const form = get_order_products(false);
         document.body.appendChild(form);
-        form.action = '';
+        form.action = '/order';
         form.method = 'post';
 
         form.submit();

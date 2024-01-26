@@ -11,13 +11,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
-    @GetMapping
-    public void get_payment_view(Model model, List<Integer> cartNo) {
 
-    }
 
     @PostMapping
     public void process_payment() {
 
     }
+
+
+
 }

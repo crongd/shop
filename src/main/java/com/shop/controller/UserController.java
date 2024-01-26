@@ -1,18 +1,15 @@
 package com.shop.controller;
 
-import com.shop.dto.product.ProductDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
-import com.shop.service.UserCertificationService;
+import com.shop.service.PortOneService;
 import com.shop.service.UserMailService;
 import com.shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +25,7 @@ public class UserController {
 
 
     private final UserService userService;
-    private final UserCertificationService userCertificationService;
+    private final PortOneService portOneService;
     private final UserMailService userMailService;
 
     @GetMapping("/login")
@@ -63,7 +60,7 @@ public class UserController {
     public String get_user_certification_token(){
         try{
             // 성공시에는 Token값 반환
-            return userCertificationService.get_portone_access_token();
+            return portOneService.get_access_token();
         }catch (Exception e){
             // 실패시에는 빈문자열 반환
             log.error(e.getMessage());
@@ -79,7 +76,7 @@ public class UserController {
     ){
         try{
             // 성공시에는 Token값 반환
-            return userCertificationService.get_user_certification(impUID, token);
+            return portOneService.get_user_certification(impUID, token);
         }catch (Exception e){
             // 실패시에는 빈문자열 반환
             log.error(e.getMessage());

@@ -17,9 +17,9 @@
         </foreach>
     </insert>
 
-    <select id="get_order" resultMap="" >
+<!--    <select id="get_order" resultMap="" >-->
 
-    </select>
+<!--    </select>-->
 
 
 </mapper>

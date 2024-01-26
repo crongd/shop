@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>주문페이지</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 </head>
 <style>
     * {
@@ -35,6 +36,8 @@
         border: 1px solid black;
         display: flex;
         justify-content: center;
+        width: 40%;
+
     }
 
     .pay-container {
@@ -99,8 +102,8 @@
     }
 
     td:nth-child(2){
-        width: 100px;
-        height: 100px;
+        width: 50px;
+        height: 50px;
     }
 
     .item-title {
@@ -136,34 +139,23 @@
                 <tr style="height: 14px">
                     <th id="item-check">선택</th>
                     <th id="item-img">상품 이미지</th>
-                    <th id="item-content">제목 / 상품설명</th>
+                    <th id="item-content">상품명 / 상품 옵션</th>
                     <th id="item-price">가격 / 수량</th>
                 </tr>
 
-                <tr style="border: 1px solid black; height: 50px">
+                <tr style="border: 1px solid black; height: 50px"  th:each="cart : ${cartList}">
                     <td class="item-check"><label><input type="checkbox"></label></td>
-                    <td style="background-image: url('https://www.boardlife.co.kr/wys2/file_attach/2015/10/14/1444752096-91.jpg')"></td>
+                    <td th:style="|'background-image:url('${cart.product.mainImg}');'|"><img th:src="${cart.product.mainImg}" alt=""></td>
                     <td class="item-content">
-                        <h3 class="item-title">상품명</h3> <br>
-                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
+                        <h3 class="item-title" th:text="${cart.product.title}">상품명</h3> <br>
+                        <p class="item-body" th:if="${cart.product.productOptions.size() != 0}" th:text="${cart.product.productOptions[0].name}"></p>
                     </td>
                     <td class="item-price">
-                        <div>10,000원</div>
-                        <div><span>1</span>개</div>
+                        <div th:text="${#numbers.formatInteger(cart.product.price, 0, 'COMMA')} + '원'">10,000원</div>
+                        <div><span th:text="${cart.amount} + '개'">1</span></div>
                     </td>
                 </tr>
-                <tr style="border: 1px solid black">
-                    <td class="item-check"><label><input type="checkbox"></label></td>
-                    <td style="background-image: url('https://www.boardlife.co.kr/wys2/file_attach/2015/10/14/1444752096-91.jpg')"></td>
-                    <td class="item-content">
-                        <h3 class="item-title">상품명</h3> <br>
-                        <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>
-                    </td>
-                    <td class="item-price">
-                        <div>10,000원</div>
-                        <div><span>1</span>개</div>
-                    </td>
-                </tr>
+
                 <tr style="height: 50px">
                     <td colspan="2">총 가격</td>
                     <td colspan="3" style="height: 50px">150000원</td>
@@ -214,9 +206,9 @@
                     <span>간편결제</span>
                     <br>
                     <!--링크 누르면 로그인 연계-->
-                    <a href="#">카카우페이</a>
-                    <a href="#">네이바페이</a>
-                    <a href="#">삼송페이</a>
+                    <button type="button" onclick="requestPayment()"><img th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></button>
+                    <button type="button">네이바페이</button>
+                    <button type="button">삼송페이</button>
                 </div>
                 <br>
                 <div style="text-align: center">
@@ -337,7 +329,19 @@
         }
     }
 
-
+    function requestPayment() {
+        PortOne.requestPayment({
+            // 고객사 storeId로 변경해주세요.
+            storeId: 'store-978154d5-492f-43b2-968a-518970d410d3',
+            paymentId: `payment-${crypto.randomUUID()}`,
+            orderName: '나이키 와플 트레이너 2 SD',
+            totalAmount: 1000,
+            currency: 'KRW',
+            channelKey: 'channel-key-7787010e-e00d-4cb5-a000-bba8ae3fbec2',
+            // pgProvider: 'PG_PROVIDER_TOSSPAYMENTS',
+            payMethod: 'EASY_PAY'
+        });
+    }
 
 
 </script>

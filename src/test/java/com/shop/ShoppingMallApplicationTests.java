@@ -6,6 +6,7 @@ import com.shop.dto.user.UserDTO;
 import com.shop.mappers.ProductMapper;
 import com.shop.mappers.ShoppingCartMapper;
 import com.shop.mappers.UserMapper;
+import com.shop.service.PortOneService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,9 @@ class ShoppingMallApplicationTests {
 
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
+
+    @Autowired
+    private PortOneService portOneService;
 
     @Test
     void contextLoads() {
@@ -55,6 +59,12 @@ class ShoppingMallApplicationTests {
 
 //        List<ShoppingCartDTO> weq = shoppingCartMapper.get_shopping_cart_by_user(UserDTO.builder().id("jaeho9859").build());
 //        System.out.println(weq);
+
+//        String token = portOneService.get_access_token();
+//        System.out.println(token);
+//        String token = "5a06b390c1cdb55d9481777fb7bd9c07710d0138";
+
+//        portOneService.pre_verification_order("2", "10");
 
     }
 
