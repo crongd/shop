@@ -1,5 +1,6 @@
 package com.shop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
 import com.shop.service.OrderService;
@@ -59,24 +60,31 @@ public class OrderController {
 
         String message = portOneService.pre_verification_order(merchant_uid, amount);
 
+        System.out.println("message : " + message);
 
-        return Objects.isNull(message) ? ResponseEntity.status(HttpStatus.OK).body(message) : ResponseEntity.status(HttpStatus.CREATED).body(message);
+
+        return !Objects.isNull(message) ? ResponseEntity.status(HttpStatus.OK).body(message) : ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
     @ResponseBody
-    @GetMapping("/payment/{imp_uid}")
+    @PostMapping("/payment/{imp_uid}")
     public ResponseEntity<String> get_inquery_order(
             @AuthenticationPrincipal UserDTO userDTO,
             @PathVariable("imp_uid") String imp_uid,
             @RequestParam("no") List<Integer> cartNumbers
-    ) {
-        Map<Boolean, ? extends Object> resultOb =  portOneService.get_inquery_order(imp_uid);
-        boolean result = resultOb.keySet().iterator().next();
+    ) throws Exception {
+       Map<Boolean, String> resultOb =  portOneService.get_inquery_order(imp_uid);
+       boolean result = resultOb.keySet().iterator().next();
+
+//        orderService.create_order(userDTO, portOneJsonStringData, cartNumbers);
 
         if (result) {
+            System.out.println("result = " + result);
             // db에 저장~
-            Map response = (Map) resultOb.get(result);
-            orderService.create_order(userDTO, response, cartNumbers);
+//            Map response = (Map) resultOb.get(result);
+
+            orderService.create_order(userDTO, resultOb.get(result), cartNumbers);
+
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         // 값 가져오기 실패
@@ -84,7 +92,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
 
 //        return result ? ResponseEntity.status(HttpStatus.OK).body(null) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
-
+//
 //        return null;
     }
 

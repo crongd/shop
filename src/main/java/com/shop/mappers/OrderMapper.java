@@ -10,7 +10,7 @@ public interface OrderMapper {
 
 
 
-    void create_order(UserDTO userDTO);
+    void create_order(OrderDTO orderDTO);
 
     void create_order_cart(OrderDTO orderDTO);
 

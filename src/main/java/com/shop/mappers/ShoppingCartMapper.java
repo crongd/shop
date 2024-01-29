@@ -20,4 +20,6 @@ public interface ShoppingCartMapper {
     void change_product_amount(ShoppingCartDTO shoppingCartDTO);
 
     void delete_product(ShoppingCartDTO shoppingCartDTO);
+
+    void delete_cart_by_no(@Param("userId") String userId,@Param("cartNo") int cartNo);
 }

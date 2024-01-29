@@ -22,14 +22,14 @@
         const merchant_uid = crypto.randomUUID();
         // const amount = 5454;
         formData.set("merchant_uid", crypto.randomUUID());
-        formData.set("amount", 5345);
+        formData.set("amount", 1004);
 
-
-        fetch(`order/payment/pre-verification`, {
+        fetch(`/order/payment/pre-verification`, {
             method: 'post',
             headers: {'X-Csrf-Token':csrfToken},
             body:formData
         }).then(resp => {
+            console.log(resp)
             if (resp.ok && resp.status === 201) {
                 request_order(merchant_uid);
             } else {
@@ -38,9 +38,10 @@
         })
     }
 
+    // 결제 요청 시도
     function request_order (merchant_uid) {
         IMP.request_pay({
-            pg: "kakaopay.",
+            pg: "kakaopay.TC0ONETIME",
             merchant_uid: merchant_uid,   // 주문번호
             name: "테스트용",
             amount: 1004,                         // 숫자 타입
@@ -49,29 +50,42 @@
             buyer_tel: "010-4242-4242",
             buyer_addr: "서울특별시 강남구 신사동",
             buyer_postcode: "01181"
-        }, order_request_result());
+        }, order_request_result);
     }
 
-    function requestPay() {
-        IMP.request_pay({
-            pg: "kakaopay.{상점ID}",
-            pay_method: "card",
-            merchant_uid: "ORD20180131-0000011",   // 주문번호
-            name: "노르웨이 회전 의자",
-            amount: 64900,                         // 숫자 타입
-            buyer_email: "gildong@gmail.com",
-            buyer_name: "홍길동",
-            buyer_tel: "010-4242-4242",
-            buyer_addr: "서울특별시 강남구 신사동",
-            buyer_postcode: "01181"
-        }, function (rsp) { // callback
-
-        });
-    }
-
+    // 요청 완료 시도
     function order_request_result(response) {
-
+        const impUid = response.imp_uid;
+        // +현재 주문한 모든 상품 목록 전달..!
+        const formData = new FormData();
+        formData.set('no', [1, 2, 3]);
+        fetch(`/order/payment/${impUid}`, {
+            method: "POST",
+            headers: {'X-Csrf-Token': csrfToken},
+            body: formData
+        }).then(resp => {});
     }
+
+    // function requestPay() {
+    //     IMP.request_pay({
+    //         pg: "kakaopay.{상점ID}",
+    //         pay_method: "card",
+    //         merchant_uid: "ORD20180131-0000011",   // 주문번호
+    //         name: "노르웨이 회전 의자",
+    //         amount: 1004,                         // 숫자 타입
+    //         buyer_email: "gildong@gmail.com",
+    //         buyer_name: "홍길동",
+    //         buyer_tel: "010-4242-4242",
+    //         buyer_addr: "서울특별시 강남구 신사동",
+    //         buyer_postcode: "01181"
+    //     }, function (rsp) { // callback
+    //
+    //     });
+    // }
+
+
+
+
 
 </script>
 </html>

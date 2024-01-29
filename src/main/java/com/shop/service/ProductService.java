@@ -37,6 +37,7 @@ public class ProductService {
         return productMapper.get_category_of_product(category);
     }
 
+
 //    private String asdasf(String order) {
 //        return switch () {
 //            case "popular" -> "";

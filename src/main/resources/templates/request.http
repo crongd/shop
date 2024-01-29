@@ -26,6 +26,11 @@ GET http://localhost:8080/user/cert/imp_009244869630
 
 
 ### Authorization:a9e335f5cdbe304f4b4df5855bcd4677374470dd
+###
+GET http://localhost:8080/order/payment/imp_009244869630?no=6
+
+
+
 
 
 

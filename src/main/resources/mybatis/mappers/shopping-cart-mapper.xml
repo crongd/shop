@@ -37,6 +37,10 @@
         delete from shopping_cart where user_id=#{user.id} and no=#{no}
     </delete>
 
+    <delete id="delete_cart_by_no" >
+        delete from shopping_cart where user_id=#{userId} and no=#{cartNo}
+    </delete>
+
     <!-- 유저정보로 장바구니 조회 -->
 <!--    <select id="get_shopping_cart_by_user" resultType="com.shop.dto.product.ProductDTO">-->
 <!--        SELECT p.*  FROM shopping_cart c-->

@@ -110,7 +110,7 @@ public class PortOneService {
 
     // 결제 내역 단건 조회 (+결제 요청 후, 사후 검증)
     // imp_uid => PORT_ONE에 등록된 고유한 결제 번호
-    public Map<Boolean, ? extends Object> get_inquery_order(String imp_uid) {
+    public Map<Boolean, String> get_inquery_order(String imp_uid) {
         Map<String, String> bodyData = Map.of(
                 "imp_uid", imp_uid
         );
@@ -126,15 +126,17 @@ public class PortOneService {
 
 
         ResponseEntity<JSONObject> response = restOperations.exchange(requestEntity, JSONObject.class);
-        System.out.println(response);
+        System.out.println("response = " + response);
         JSONObject responseBody = response.getBody();
+
+//        return JSONObject.toJSONString((Map) responseBody.get("response"));
         int code = (int) responseBody.get("code");
         String message = (String) responseBody.get("message");
         System.out.println(code);
         // code가 0이면 성공임
         if(code == 0){
             Map responseData = (Map) responseBody.get("response");
-            return Map.of(true, responseData);
+            return Map.of(true, JSONObject.toJSONString(responseData));
         }else{
 //            String message = (String) responseBody.get("message");
             return Map.of(false, message);

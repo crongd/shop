@@ -2,9 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}">
     <title>주문페이지</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
-    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
 </head>
 <style>
     * {
@@ -115,6 +117,11 @@
         justify-content: space-around;
     }
 
+    .pay-img {
+        width: 100px;
+        height: 40px;
+    }
+
 
 </style>
 <body>
@@ -143,7 +150,7 @@
                     <th id="item-price">가격 / 수량</th>
                 </tr>
 
-                <tr style="border: 1px solid black; height: 50px"  th:each="cart : ${cartList}">
+                <tr style="border: 1px solid black; height: 50px" class="products" th:each="cart : ${cartList}">
                     <td class="item-check"><label><input type="checkbox"></label></td>
                     <td th:style="|'background-image:url('${cart.product.mainImg}');'|"><img th:src="${cart.product.mainImg}" alt=""></td>
                     <td class="item-content">
@@ -154,11 +161,12 @@
                         <div th:text="${#numbers.formatInteger(cart.product.price, 0, 'COMMA')} + '원'">10,000원</div>
                         <div><span th:text="${cart.amount} + '개'">1</span></div>
                     </td>
+                    <input type="hidden" class="products-no" th:value="${cart.no}">
                 </tr>
 
                 <tr style="height: 50px">
                     <td colspan="2">총 가격</td>
-                    <td colspan="3" style="height: 50px">150000원</td>
+                    <td colspan="3" id="total-price" style="height: 50px" th:text="${#numbers.formatInteger(#aggregates.sum(cartList.![product.price * amount]), 0, 'COMMA')} + 원">150000원</td>
                 </tr>
 
 
@@ -203,17 +211,20 @@
                     </label>
                 </div>
                 <div class="pay2">
-                    <span>간편결제</span>
                     <br>
                     <!--링크 누르면 로그인 연계-->
-                    <button type="button" onclick="requestPayment()"><img th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></button>
-                    <button type="button">네이바페이</button>
-                    <button type="button">삼송페이</button>
+<!--                    <input type="radio">-->
+                    <label><input type="radio" name="pay-item" checked><img class="pay-img" th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></label>
+                    <label><input type="radio" name="pay-item" ><img class="pay-img" th:src="@{/image/pay/naver-pay-icon.png}" alt="네이버페이 이미지"/></label>
+
+<!--                    <button type="button" onclick="pre_order_request()"><img class="pay-img" th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></button>-->
+<!--                    <button type="button">네이바페이</button>-->
+<!--                    <button type="button">삼송페이</button>-->
                 </div>
                 <br>
                 <div style="text-align: center">
                     <button class="btn">취소</button>
-                    <button class="btn">결제완료</button>
+                    <button class="btn">결제하기</button>
                 </div>
             </div>
         </section>
@@ -243,9 +254,11 @@
 </body>
 </html>
 <script>
+    IMP.init('imp07007375')
+    const csrfToken = document.querySelector('meta[name=_csrf]').content;
     const addrBtn = document.querySelector('#addr');
     const [cBtn, sBtn] = document.getElementsByClassName('btn');
-    const [name,phone,addr1] = document.querySelectorAll('input[type=text]');
+    const [name,phone,postCode,addr1,addr2] = document.querySelectorAll('input[type=text]');
     const [pay1, pay2] = document.querySelectorAll('input[type=radio]')
     const [payDiv1] = document.getElementsByClassName('pay1');
     const [payDiv2] = document.getElementsByClassName('pay2');
@@ -254,6 +267,24 @@
     const mainAddr = document.getElementById('addr1'); // 주소
     const detailAddr = document.getElementById('addr2'); // 상세주소
 
+    const totalPrice = document.querySelector('#total-price').textContent.replaceAll(/[,원]/g, '');
+    const productsNo = document.querySelectorAll('.products-no');
+
+
+
+    const payItem = document.querySelectorAll('input[name=pay-item]');
+    console.log(payItem)
+
+    console.log(productsNo)
+    // console.log(name)
+    // console.log(phone)
+    // console.log(postCode)
+    // console.log(addr1)
+    // console.log(addr2)
+
+
+
+    ////////////////////////// CSS List
     pay1.onchange = () => {
         payDiv1.style.display='block';
         payDiv2.style.display='none';
@@ -264,6 +295,8 @@
         payDiv1.style.display='none';
     }
 
+
+    ////////////////////////////// Event List /////////////////////////////////
 
     // 주소지 팝업
     addrBtn.onclick= () => {
@@ -314,6 +347,7 @@
     // 취소버튼 클릭 (전 페이지로?)
     cBtn.onclick = () => {
         // window.location.href = '장바구니';
+
     }
 
     //폰번호 (정규식, 자동화(?) - 버튼 생략 가능 자동화)
@@ -322,25 +356,89 @@
     }
 
 
-    // 결제완료 버튼 (필수 정보 입력 확인)
+    // 결제하기 버튼 (필수 정보 입력 확인)
     sBtn.onclick = () => {
-        if (name.value === "" || phone.value === "" || addr1.value === "") {
+        console.log(name.trim().value);
+        if (name.trim().value === "" || phone.trim().value === "" || postCode.trim().value === "" || addr1.trim().value === "") {
             alert('결제 필수 정보가 비어있다');
+        } else {
+            const payItem = document.querySelectorAll('input[name=pay-item]');
+
         }
     }
 
-    function requestPayment() {
-        PortOne.requestPayment({
-            // 고객사 storeId로 변경해주세요.
-            storeId: 'store-978154d5-492f-43b2-968a-518970d410d3',
-            paymentId: `payment-${crypto.randomUUID()}`,
-            orderName: '나이키 와플 트레이너 2 SD',
-            totalAmount: 1000,
-            currency: 'KRW',
-            channelKey: 'channel-key-7787010e-e00d-4cb5-a000-bba8ae3fbec2',
-            // pgProvider: 'PG_PROVIDER_TOSSPAYMENTS',
-            payMethod: 'EASY_PAY'
-        });
+
+
+
+
+
+
+    //////////////////////////// function ////////////////////////////////////////////
+
+    // 사전 검증 (사전등록) 시도
+    function pre_order_request() {
+        const formData = new FormData();
+        const merchant_uid = crypto.randomUUID();
+        // const amount = 5454;
+        formData.set("merchant_uid", crypto.randomUUID());
+        formData.set("amount", totalPrice);
+
+        fetch(`/order/payment/pre-verification`, {
+            method: 'post',
+            headers: {'X-Csrf-Token':csrfToken},
+            body:formData
+        }).then(resp => {
+            console.log(resp)
+            if (resp.ok && resp.status === 201) {
+                request_order(merchant_uid);
+            } else {
+                alert('문제가 있음. 다시 시도하셈');
+            }
+        })
+    }
+
+    // 결제 요청 시도
+    function request_order (merchant_uid) {
+        const products = document.querySelectorAll('.products');
+        const firstProduct = products[0].querySelector('.item-title').textContent.substring(0, 10);
+        IMP.request_pay({
+            pg: "kakaopay.TC0ONETIME",
+            merchant_uid: merchant_uid,   // 주문번호
+            name: `${firstProduct}.. (외 ${products.length-1}건)`,
+            amount: totalPrice,                         // 숫자 타입
+            buyer_email: "test@gmail.com",
+            buyer_name: name.value,
+            buyer_tel: phone.value,
+            buyer_addr: addr1.value + " " + addr2.value,
+            buyer_postcode: postCode.value
+        }, order_request_result);
+    }
+
+    // 요청 완료 시도
+    function order_request_result(response) {
+        if (response.success) {
+            let cartNo = [];
+            for (let i = 0; i < productsNo.length; i++) {
+                cartNo[i] = productsNo[i].value;
+            }
+            const impUid = response.imp_uid;
+            // +현재 주문한 모든 상품 목록 전달..!
+            const formData = new FormData();
+            formData.set('no', cartNo);
+            fetch(`/order/payment/${impUid}`, {
+                method: "POST",
+                headers: {'X-Csrf-Token': csrfToken},
+                body: formData
+            }).then(resp => {
+                if (resp.ok) {
+                    alert('주문됨')
+                } else {
+                    alert('쥬ㅜ만 안됨')
+                }
+            });
+        } else {
+            alert('불러오기 실패함')
+        }
     }
 
 
