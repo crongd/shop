@@ -214,8 +214,8 @@
                     <br>
                     <!--링크 누르면 로그인 연계-->
 <!--                    <input type="radio">-->
-                    <label><input type="radio" name="pay-item" checked><img class="pay-img" th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></label>
-                    <label><input type="radio" name="pay-item" ><img class="pay-img" th:src="@{/image/pay/naver-pay-icon.png}" alt="네이버페이 이미지"/></label>
+                    <label><input type="radio" name="pay-item" value="kakao" ><img class="pay-img" th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></label>
+                    <label><input type="radio" name="pay-item" value="naver" ><img class="pay-img" th:src="@{/image/pay/naver-pay-icon.png}" alt="네이버페이 이미지"/></label>
 
 <!--                    <button type="button" onclick="pre_order_request()"><img class="pay-img" th:src="@{/image/pay/kakao-pay-icon.png}" alt="카카오페이 이미지"/></button>-->
 <!--                    <button type="button">네이바페이</button>-->
@@ -270,10 +270,6 @@
     const totalPrice = document.querySelector('#total-price').textContent.replaceAll(/[,원]/g, '');
     const productsNo = document.querySelectorAll('.products-no');
 
-
-
-    const payItem = document.querySelectorAll('input[name=pay-item]');
-    console.log(payItem)
 
     console.log(productsNo)
     // console.log(name)
@@ -358,12 +354,17 @@
 
     // 결제하기 버튼 (필수 정보 입력 확인)
     sBtn.onclick = () => {
-        console.log(name.trim().value);
-        if (name.trim().value === "" || phone.trim().value === "" || postCode.trim().value === "" || addr1.trim().value === "") {
+        console.log(name.value.trim())
+        if (name.value.trim() === "" || phone.value.trim() === "" || postCode.value.trim() === "" || addr1.value.trim() === "") {
             alert('결제 필수 정보가 비어있다');
         } else {
-            const payItem = document.querySelectorAll('input[name=pay-item]');
+            const [kakaoPay, naverPay] = document.querySelectorAll('input[name=pay-item]');
+            if (kakaoPay.checked) {
+                pre_order_request();
+            }
+            if (naverPay.checked) {
 
+            }
         }
     }
 
