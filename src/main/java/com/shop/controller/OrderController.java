@@ -60,10 +60,11 @@ public class OrderController {
 
         String message = portOneService.pre_verification_order(merchant_uid, amount);
 
+
         System.out.println("message : " + message);
 
 
-        return !Objects.isNull(message) ? ResponseEntity.status(HttpStatus.OK).body(message) : ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return  !Objects.isNull(message) ? ResponseEntity.status(HttpStatus.OK).body(message) : ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
     @ResponseBody
@@ -75,21 +76,31 @@ public class OrderController {
     ) throws Exception {
        Map<Boolean, String> resultOb =  portOneService.get_inquery_order(imp_uid);
        boolean result = resultOb.keySet().iterator().next();
+       String resultV = resultOb.get(false);
+        System.out.println(resultV);
+
+
+
 
 //        orderService.create_order(userDTO, portOneJsonStringData, cartNumbers);
+        // 값 가져오기 실패
+        String message = "값 가져오기 실패함.";
 
         if (result) {
             System.out.println("result = " + result);
             // db에 저장~
 //            Map response = (Map) resultOb.get(result);
 
-            orderService.create_order(userDTO, resultOb.get(result), cartNumbers);
+            boolean returnResult = orderService.create_order(userDTO, resultOb.get(result), cartNumbers);
+
+            if (!returnResult) {
+                return ResponseEntity.status(HttpStatus.MULTI_STATUS).body("가격이 안 맞음");
+            }
 
             return ResponseEntity.status(HttpStatus.OK).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultV);
         }
-        // 값 가져오기 실패
-        String message = "";
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
 
 //        return result ? ResponseEntity.status(HttpStatus.OK).body(null) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
 //

@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,16 +42,16 @@ public class OrderService {
 //        Long startedAt = Long.valueOf((Integer) orderDataMap.get("started_at"));
 //        System.out.println(orderDataMap);
 
-        System.out.println("orderDataString = " +orderDataString);
+//        System.out.println("orderDataString = " +orderDataString);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 모르는 내용이 있으면 넘어가라
-        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false); // 알수없는 서브타입 오류발생
+        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false); // 알 수 없는 서브타입 오류발생
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true); // 빈 문자열이 오면 null로 처리해줘
-        objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, true);
-        objectMapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
-        objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, true);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE);
+        objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, true); // 타임존 셋
+        objectMapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true); // Long 타입을 int로 변환
+        objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, true); // 이건 뭐지
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE); // 넘겨오는 데이터 case 변환
 
 
 
@@ -63,6 +60,12 @@ public class OrderService {
         orderDTO.setShoppingCarts(cartNumbers.parallelStream().map(cartNumber ->
             ShoppingCartDTO.builder().no(cartNumber).build()
         ).toList());
+
+        int price = orderMapper.get_request_price(cartNumbers);
+
+        if (price != orderDTO.getAmount()) {
+            return false;
+        }
 
         // 해당 유저의 ORDER 작성
         orderMapper.create_order(orderDTO);
@@ -74,6 +77,8 @@ public class OrderService {
         for (int no : cartNumbers) {
             shoppingCartMapper.delete_cart_by_no(userDTO.getId(), no);
         }
+
+        return true;
 
 
 //        OrderDTO orderDTO = OrderDTO.builder()
@@ -98,7 +103,7 @@ public class OrderService {
 //                .pgId((String)orderDataMap.get("pg_id"))
 //                .build();
 
-        return true;
+//        return true;
 
     }
 

@@ -16,13 +16,24 @@
     const csrfToken = document.querySelector('meta[name=_csrf]').content;
 
     pre_order_request()
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    // pre_order_request()
     // 사전 검증 (사전등록) 시도
     function pre_order_request() {
         const formData = new FormData();
         const merchant_uid = crypto.randomUUID();
         // const amount = 5454;
-        formData.set("merchant_uid", crypto.randomUUID());
-        formData.set("amount", 1004);
+        formData.set("merchant_uid", merchant_uid);
+        formData.set("amount", 500);
 
         fetch(`/order/payment/pre-verification`, {
             method: 'post',
@@ -43,13 +54,13 @@
         IMP.request_pay({
             pg: "kakaopay.TC0ONETIME",
             merchant_uid: merchant_uid,   // 주문번호
-            name: "테스트용",
-            amount: 1004,                         // 숫자 타입
+            name: `테스트 제품`,
+            amount: 100,                         // 숫자 타입
             buyer_email: "test@gmail.com",
-            buyer_name: "구매자이름",
-            buyer_tel: "010-4242-4242",
-            buyer_addr: "서울특별시 강남구 신사동",
-            buyer_postcode: "01181"
+            buyer_name: "테스트구매",
+            buyer_tel: "010-1234-5678",
+            buyer_addr: "서울특별시 강남구 삼성동",
+            buyer_postcode: "123-456"
         }, order_request_result);
     }
 

@@ -193,22 +193,22 @@
                 <div class="pay1">
                     <span>신용카드 결제</span>
                     <br>
-                    <label>
+<!--                    <label>-->
 <!--                        <span>카드사</span>-->
-                        <select name="" id="">
-                            <option hidden="hidden">카드사 선택</option>
-                            <option>신한</option>
-                            <option>국민</option>
-                            <option>새마을</option>
-                        </select>
-                    </label> <br>
-                    <label>
-                        카드번호
-                        <input type="number" class="card-num"> -
-                        <input type="number" class="card-num"> -
-                        <input type="number" class="card-num"> -
-                        <input type="number" class="card-num">
-                    </label>
+<!--                        <select name="" id="">-->
+<!--                            <option hidden="hidden">카드사 선택</option>-->
+<!--                            <option>신한</option>-->
+<!--                            <option>국민</option>-->
+<!--                            <option>새마을</option>-->
+<!--                        </select>-->
+<!--                    </label> <br>-->
+<!--                    <label>-->
+<!--                        카드번호-->
+<!--                        <input type="number" class="card-num"> - -->
+<!--                        <input type="number" class="card-num"> - -->
+<!--                        <input type="number" class="card-num"> - -->
+<!--                        <input type="number" class="card-num">-->
+<!--                    </label>-->
                 </div>
                 <div class="pay2">
                     <br>
@@ -254,7 +254,7 @@
 </body>
 </html>
 <script>
-    IMP.init('imp07007375')
+
     const csrfToken = document.querySelector('meta[name=_csrf]').content;
     const addrBtn = document.querySelector('#addr');
     const [cBtn, sBtn] = document.getElementsByClassName('btn');
@@ -269,9 +269,10 @@
 
     const totalPrice = document.querySelector('#total-price').textContent.replaceAll(/[,원]/g, '');
     const productsNo = document.querySelectorAll('.products-no');
+    const [kakaoPay, naverPay] = document.querySelectorAll('input[name=pay-item]');
 
+    IMP.init('imp07007375')
 
-    console.log(productsNo)
     // console.log(name)
     // console.log(phone)
     // console.log(postCode)
@@ -358,13 +359,7 @@
         if (name.value.trim() === "" || phone.value.trim() === "" || postCode.value.trim() === "" || addr1.value.trim() === "") {
             alert('결제 필수 정보가 비어있다');
         } else {
-            const [kakaoPay, naverPay] = document.querySelectorAll('input[name=pay-item]');
-            if (kakaoPay.checked) {
-                pre_order_request();
-            }
-            if (naverPay.checked) {
-
-            }
+            pre_order_request()
         }
     }
 
@@ -380,9 +375,16 @@
     function pre_order_request() {
         const formData = new FormData();
         const merchant_uid = crypto.randomUUID();
+
+        let cartNo = [];
+        for (let i = 0; i < productsNo.length; i++) {
+            cartNo[i] = productsNo[i].value;
+        }
+
         // const amount = 5454;
-        formData.set("merchant_uid", crypto.randomUUID());
+        formData.set("merchant_uid", merchant_uid);
         formData.set("amount", totalPrice);
+        formData.set("cartNo", cartNo);
 
         fetch(`/order/payment/pre-verification`, {
             method: 'post',
@@ -402,17 +404,33 @@
     function request_order (merchant_uid) {
         const products = document.querySelectorAll('.products');
         const firstProduct = products[0].querySelector('.item-title').textContent.substring(0, 10);
-        IMP.request_pay({
-            pg: "kakaopay.TC0ONETIME",
-            merchant_uid: merchant_uid,   // 주문번호
-            name: `${firstProduct}.. (외 ${products.length-1}건)`,
-            amount: totalPrice,                         // 숫자 타입
-            buyer_email: "test@gmail.com",
-            buyer_name: name.value,
-            buyer_tel: phone.value,
-            buyer_addr: addr1.value + " " + addr2.value,
-            buyer_postcode: postCode.value
-        }, order_request_result);
+        if (pay1.checked) {
+            IMP.request_pay(
+                {
+                    pg: "danal_tpay.9810030929",
+                    pay_method: "card",
+                    merchant_uid: merchant_uid, // 상점에서 생성한 고유 주문번호
+                    name: `${firstProduct}.. (외 ${products.length-1}건)`,
+                    amount: totalPrice,
+                    buyer_email: "test@portone.io",
+                    buyer_name: name.value,
+                    buyer_tel: phone.value,
+                    buyer_addr: addr1.value + " " + addr2.value,
+                    buyer_postcode: postCode.value,
+                },order_request_result);
+        } else if (kakaoPay.checked) {
+            IMP.request_pay({
+                pg: "kakaopay.TC0ONETIME",
+                merchant_uid: merchant_uid,   // 주문번호
+                name: `${firstProduct}.. (외 ${products.length-1}건)`,
+                amount: totalPrice,                         // 숫자 타입
+                buyer_email: "test@gmail.com",
+                buyer_name: name.value,
+                buyer_tel: phone.value,
+                buyer_addr: addr1.value + " " + addr2.value,
+                buyer_postcode: postCode.value
+            }, order_request_result);
+        }
     }
 
     // 요청 완료 시도
@@ -431,8 +449,11 @@
                 headers: {'X-Csrf-Token': csrfToken},
                 body: formData
             }).then(resp => {
-                if (resp.ok) {
-                    alert('주문됨')
+                if (resp.status === 200) {
+                    alert('주문됨');
+                    location.href = "/";
+                } else if (resp.status === 207) {
+                    alert('가격 오류');
                 } else {
                     alert('쥬ㅜ만 안됨')
                 }
