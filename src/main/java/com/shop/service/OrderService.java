@@ -61,6 +61,8 @@ public class OrderService {
             ShoppingCartDTO.builder().no(cartNumber).build()
         ).toList());
 
+
+
         int price = orderMapper.get_request_price(cartNumbers);
 
         if (price != orderDTO.getAmount()) {

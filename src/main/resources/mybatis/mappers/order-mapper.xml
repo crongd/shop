@@ -38,7 +38,7 @@
 <!--    </select>-->
 
     <select id="get_request_price" resultType="int" >
-        select sum(price) as price from product p inner join shopping_cart sc on p.no = sc.product_no
+        select sum(p.price * amount) as price from product p inner join shopping_cart sc on p.no = sc.product_no
         <trim prefix="where" prefixOverrides="and | or">
             <foreach collection="list" item="no" separator="or">
                 sc.no=#{no}
