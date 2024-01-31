@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>마이 페이지</title>
-    <link rel="stylesheet" href="../../static/css/user/mypage.css">
     <script src="https://kit.fontawesome.com/d19fdaba43.js" crossorigin="anonymous"></script>
 
 </head>
@@ -11,9 +10,9 @@
 
 <div class="my-info-container">
     <section class="my-info-section">
-        <div id="my-icon" style="background-image: url('https://static2.e-himart.co.kr/contents/goods/00/19/48/46/59/0019484659__MW64027_5000188269__M_450_450.jpg')"></div>
+        <div id="my-icon" th:style='|background-image: url(${user.imageFile})|'></div>
         <div class="my-info">
-            <span>abcd@naver.com</span>
+            <span th:text="${user.id}+ '님 ㅎㅇ요'">jaeho9859님 ㅎㅇ</span>
             <a href="#">회원정보 수정</a>
         </div>
     </section>
@@ -59,65 +58,21 @@
 
         <section class="order-list-section">
             <ul>
-                <li>
+                <li th:each="order : ${orders}">
                     <div class="order-number">
                         <span>주문번호:</span>
-                        <a href="#">123457899</a>
+                        <a href="#" th:text="${order.merchantUid}">123457899</a>
                     </div>
 
                     <div class="order-summary">
                         <div class="order-major-img">
-                            <img src="https://online.aniplex.co.jp/on/demandware.static/-/Sites-all-master-catalog/ja_JP/dw3ba912f8/items/title-H/bocchi-rocks/GDS/event/LIVE-kose/01_600_Thats.jpg" alt="">
+                            <img th:src="${order.shoppingCarts[0].product.mainImg}" alt="">
                         </div>
                         <div class="order-info">
-                            <span class="order-title">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
-                            <span class="order-date">2023.12.21</span>
-                            <span class="order-total-price">30,000원</span>
+                            <span class="order-title" th:text="${order.name}">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
+                            <span class="order-date" th:text="${order.createdAt}">2023.12.21</span>
+                            <span class="order-total-price" th:text="${#numbers.formatInteger(order.amount, 0, 'COMMA')} + '원'">30,000원</span>
                             <span class="order-status order-complete">결제완료</span>
-                            <div>
-                                <button class="order-detail-btn">상세정보</button>
-                                <button class="order-review-btn">리뷰작성</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="order-number">
-                        <span>주문번호:</span>
-                        <a href="#">123457899</a>
-                    </div>
-
-                    <div class="order-summary">
-                        <div class="order-major-img">
-                            <img src="https://online.aniplex.co.jp/on/demandware.static/-/Sites-all-master-catalog/ja_JP/dw3ba912f8/items/title-H/bocchi-rocks/GDS/event/LIVE-kose/01_600_Thats.jpg" alt="">
-                        </div>
-                        <div class="order-info">
-                            <span class="order-title">「結束バン星-」ラバンドLIVE-恒バン星-」星-」ライブロ結束バンドLIVE-恒星-」ライブロ結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
-                            <span class="order-date">2023.12.21</span>
-                            <span class="order-total-price">30,000원</span>
-                            <span class="order-status order-canceled">취소</span>
-                            <div>
-                                <button class="order-detail-btn">상세정보</button>
-                                <button class="order-review-btn">리뷰작성</button>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="order-number">
-                        <span>주문번호:</span>
-                        <a href="#">123457899</a>
-                    </div>
-
-                    <div class="order-summary">
-                        <div class="order-major-img">
-                            <img src="https://online.aniplex.co.jp/on/demandware.static/-/Sites-all-master-catalog/ja_JP/dw3ba912f8/items/title-H/bocchi-rocks/GDS/event/LIVE-kose/01_600_Thats.jpg" alt="">
-                        </div>
-                        <div class="order-info">
-                            <span class="order-title">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）외 4건</span>
-                            <span class="order-date">2023.12.21</span>
-                            <span class="order-total-price">30,000원</span>
-                            <span class="order-status order-shipped">배송완료</span>
                             <div>
                                 <button class="order-detail-btn">상세정보</button>
                                 <button class="order-review-btn">리뷰작성</button>

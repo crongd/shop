@@ -23,7 +23,7 @@ public class OrderDTO {
 
     private String buyerAddr; // 주문자 주소
     private String buyerPostcode; //주문자 우편번호
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     private int amount; // 결제건의 결제금액
     private String currency; //결제통화 구분코드 (KRW, USD, VND, ... Default: KRW)

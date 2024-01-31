@@ -1,6 +1,7 @@
 package com.shop.mappers;
 
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.shopping.OrderDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,5 @@ public interface ShoppingCartMapper {
     void delete_cart_by_no(@Param("userId") String userId,@Param("cartNo") int cartNo);
 
     List<ShoppingCartDTO> select_cart_list_by_cartNo(List<Integer> cartNo);
+    List<OrderDTO> select_cart_list_by_userId(UserDTO userDTO);
 }

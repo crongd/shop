@@ -1,5 +1,6 @@
 package com.shop.controller;
 
+import com.shop.dto.shopping.OrderDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
 import com.shop.service.PortOneService;
@@ -180,8 +181,10 @@ public class UserController {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     @GetMapping("/mypage")
-    public String get_my_page_view(@AuthenticationPrincipal UserDTO userDTO) {
-
+    public String get_my_page_view(@AuthenticationPrincipal UserDTO userDTO, Model model) {
+        List<OrderDTO> orders = userService.get_my_page_data(userDTO);
+        model.addAttribute("user", userDTO);
+        model.addAttribute("orders", orders);
         return "user/my-page";
     }
 

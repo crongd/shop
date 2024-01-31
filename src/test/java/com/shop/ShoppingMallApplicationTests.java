@@ -1,6 +1,7 @@
 package com.shop;
 
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.shopping.OrderDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
 import com.shop.mappers.OrderMapper;
@@ -78,11 +79,14 @@ class ShoppingMallApplicationTests {
 //        list.add(3);
 //        System.out.println(orderMapper.get_request_price(list));
 
-        List<Integer> cartNo = new ArrayList<>();
-        cartNo.add(1);
-        cartNo.add(2);
+//        List<Integer> cartNo = new ArrayList<>();
+//        cartNo.add(3);
+//        cartNo.add(4);
+//
+//        List<ShoppingCartDTO> list = shoppingCartMapper.select_cart_list_by_cartNo(cartNo);
 
-        List<ShoppingCartDTO> list = shoppingCartMapper.select_cart_list_by_cartNo(cartNo);
+//        List<OrderDTO> list = shoppingCartMapper.select_cart_list_by_userId(UserDTO.builder().id("jaeho9859").build());
+        List<OrderDTO> list = orderMapper.get_orders();
 
         System.out.println(list);
 

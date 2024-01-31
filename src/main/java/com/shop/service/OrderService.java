@@ -53,18 +53,16 @@ public class OrderService {
         objectMapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, true); // 이건 뭐지
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE); // 넘겨오는 데이터 case 변환
 
+        List<ShoppingCartDTO> cartList = shoppingCartMapper.select_cart_list_by_cartNo(cartNumbers);
 
 
         OrderDTO orderDTO = objectMapper.readValue(orderDataString, OrderDTO.class);
         orderDTO.setUser(userDTO);
-        orderDTO.setShoppingCarts(cartNumbers.parallelStream().map(cartNumber ->
-            ShoppingCartDTO.builder().no(cartNumber).build()
-        ).toList());
+        orderDTO.setShoppingCarts(cartList);
 
 
         System.out.println(orderDTO);
 
-        List<ShoppingCartDTO> cartList = shoppingCartMapper.select_cart_list_by_cartNo(cartNumbers);
 
 
         int price = orderMapper.get_request_price(cartNumbers);

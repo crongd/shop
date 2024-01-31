@@ -123,7 +123,12 @@
             left outer join shopping_cart_option sco
             on sc.no = sco.shopping_cart_no
             left outer join product_option po
-            on sco.product_option_no = po.no;
+            on sco.product_option_no = po.no
+        <trim prefix="where" prefixOverrides="and | or">
+            <foreach collection="list" item="no" separator="or">
+                sc.no=#{no}
+            </foreach>
+        </trim>
 <!--        SELECT *, sc.no as sc_no, sco.no as sco_no FROM shopping_cart sc left outer join shopping_cart_option sco on sc.no = sco.shopping_cart_no;-->
 <!--        <trim prefix="where" prefixOverrides="and | or">-->
 <!--            <foreach collection="list" item="no" separator="or">-->
@@ -131,6 +136,12 @@
 <!--            </foreach>-->
 <!--        </trim>-->
     </select>
+
+
+    <select id="select_cart_list_by_userId" resultType="com.shop.dto.shopping.OrderDTO" >
+        select * from `order` where user_id=#{id}
+    </select>
+
 
 
 </mapper>

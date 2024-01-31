@@ -298,7 +298,7 @@
             <a href="/user/join" class="user">회원가입</a> <!--회원가입 화면 get-->
         </div>
         <div class="user-container" th:if="${#authentication.principal} != anonymousUser">
-            <a href="">마이페이지</a>
+            <a href="/user/mypage">마이페이지</a>
             <a href="/user/cart">장바구니</a>
             <a href="/user/logout">로그아웃</a>
         </div>

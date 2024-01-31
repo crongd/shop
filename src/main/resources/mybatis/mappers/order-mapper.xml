@@ -28,9 +28,9 @@
     </insert>
 
     <insert id="create_order_product" >
-        insert into `order_product`(order_id, product_no, amount) values
+        insert into `order_product`(order_id, product_no, product_option, product_main_img, amount) values
         <foreach collection="shoppingCarts" item="shoppingCart" separator="," >
-            (#{merchantUid}, #{shoppingCart.product.no}, #{shoppingCart.product.productOptions}, #{amount})
+            (#{merchantUid}, #{shoppingCart.product.no}, #{shoppingCart.product.productOptions[0].no}, #{shoppingCart.product.mainImg}, #{shoppingCart.amount})
         </foreach>
     </insert>
 
@@ -57,22 +57,21 @@
 
     <resultMap id="get_order_of_product" type="com.shop.dto.shopping.OrderDTO" autoMapping="true" >
         <id property="merchantUid" column="order_id" />
-        <collection property="shoppingCarts" >
+        <collection property="shoppingCarts" javaType="list" ofType="com.shop.dto.shopping.ShoppingCartDTO" autoMapping="true">
             <result property="amount" column="product_amount" />
-            <association property="product" autoMapping="true">
-                <id property="no" column="" />
+            <association property="product" javaType="com.shop.dto.product.ProductDTO">
+                <result property="mainImg" column="product_main_img" />
             </association>
         </collection>
     </resultMap>
 
     <select id="get_orders" resultMap="get_order_of_product" >
-        select * from
-        order o inner join
-        order_product op
-        on o.order_id = op.order_id
-        inner join product p
-        on op.product_no = p.no
-        where id = #{id}
+        select
+        *, o.order_id as o_id,
+        op.order_id as op_id
+        from `order` o
+        left outer join `order_product` op
+        on o.order_id=op.order_id
     </select>
 
 
