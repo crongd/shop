@@ -436,17 +436,25 @@
     // 요청 완료 시도
     function order_request_result(response) {
         if (response.success) {
+            const impUid = response.imp_uid;
+            // const bodyData = [
+            //     {no: 1, amount:10},
+            //     {no: 2, amount:1},
+            //     {no: 3, amount:5}
+            // ]
             let cartNo = [];
             for (let i = 0; i < productsNo.length; i++) {
                 cartNo[i] = productsNo[i].value;
             }
-            const impUid = response.imp_uid;
             // +현재 주문한 모든 상품 목록 전달..!
             const formData = new FormData();
             formData.set('no', cartNo);
             fetch(`/order/payment/${impUid}`, {
                 method: "POST",
-                headers: {'X-Csrf-Token': csrfToken},
+                headers: {
+                    // 'Content-Type': 'application/json',
+                    'X-Csrf-Token': csrfToken
+                },
                 body: formData
             }).then(resp => {
                 if (resp.status === 200) {

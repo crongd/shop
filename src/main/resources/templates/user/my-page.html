@@ -199,7 +199,8 @@
     }
 
     .my-info-container{
-        background-color: black;
+        background-image: linear-gradient(to right, #fc3d40, #fc6d5b 80%);
+        /*background-color: black;*/
         padding: 20px 100px;
         font-size: var(--text-large-size);
         color: white;
@@ -228,10 +229,15 @@
         font-size: var(--text-small-size);
         padding: 8px 15px;
         text-decoration: none;
+        border: 1px white solid;
         border-radius: 5px;
-        background-color: cornflowerblue;
-        color: black;
+        /*background-color: cornflowerblue;*/
+        color: white;
         font-weight: bold;
+    }
+
+    .my-info a:hover {
+        background-color: #ff9f86;
     }
 
     /**************************************************/
@@ -411,6 +417,7 @@
 
     /**************************************************************************/
     .order-detail-container{
+        display: none;
         position: fixed;
         top: 0;
         width: 100vw;

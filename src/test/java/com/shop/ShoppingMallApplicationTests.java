@@ -72,12 +72,19 @@ class ShoppingMallApplicationTests {
 //        portOneService.pre_verification_order("2", "10");
 
 
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        System.out.println(orderMapper.get_request_price(list));
+//        List<Integer> list = new ArrayList<>();
+//        list.add(1);
+//        list.add(2);
+//        list.add(3);
+//        System.out.println(orderMapper.get_request_price(list));
 
+        List<Integer> cartNo = new ArrayList<>();
+        cartNo.add(1);
+        cartNo.add(2);
+
+        List<ShoppingCartDTO> list = shoppingCartMapper.select_cart_list_by_cartNo(cartNo);
+
+        System.out.println(list);
 
 
     }

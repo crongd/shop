@@ -100,4 +100,37 @@
 
 
 
+
+    <resultMap id="my_page_resultMap" type="com.shop.dto.shopping.ShoppingCartDTO" autoMapping="true" >
+        <id property="no" column="sc_no" />
+        <association property="product" javaType="com.shop.dto.product.ProductDTO" autoMapping="true">
+            <id property="no" column="product_no" />
+            <collection property="productOptions" javaType="list" ofType="com.shop.dto.product.ProductOptionDTO"  autoMapping="true">
+                <result property="no" column="po_no" />
+            </collection>
+        </association>
+    </resultMap>
+
+    <select id="select_cart_list_by_cartNo" resultMap="my_page_resultMap" >
+        SELECT
+            *,
+            sc.no as sc_no,
+            sco.no as sco_no,
+            po.no as po_no
+        FROM shopping_cart sc
+            inner join product p
+            on p.no = sc.product_no
+            left outer join shopping_cart_option sco
+            on sc.no = sco.shopping_cart_no
+            left outer join product_option po
+            on sco.product_option_no = po.no;
+<!--        SELECT *, sc.no as sc_no, sco.no as sco_no FROM shopping_cart sc left outer join shopping_cart_option sco on sc.no = sco.shopping_cart_no;-->
+<!--        <trim prefix="where" prefixOverrides="and | or">-->
+<!--            <foreach collection="list" item="no" separator="or">-->
+<!--                sc.no=#{no}-->
+<!--            </foreach>-->
+<!--        </trim>-->
+    </select>
+
+
 </mapper>

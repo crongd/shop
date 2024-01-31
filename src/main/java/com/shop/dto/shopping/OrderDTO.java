@@ -32,6 +32,7 @@ public class OrderDTO {
     private int cardQuota; //결제 할부개월 수 (일시불은 0) - 신용카드인경우
     private String payMethod; //결제건의 결제수단을 구분하는 코드
     private String pgProvider; //kakaopay 와 같은 결제 수단
+    private String name; //주문건 내용
 
     private int cardType; // 카드 구분코드 (0: 신용카드, 1: 체크카드, null: 카드정보제공하지않음)
     private String cardName; //결제건의 카드사명

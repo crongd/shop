@@ -15,9 +15,12 @@ public interface OrderMapper {
 
     void create_order(OrderDTO orderDTO);
 
-    void create_order_cart(OrderDTO orderDTO);
+    void create_order_product(OrderDTO orderDTO);
 
-    void get_order(OrderDTO orderDTO);
+    void create_order_option(OrderDTO orderDTO);
+
+
+    void get_orders(OrderDTO orderDTO);
 
     int get_request_price(List<Integer> cartNO);
 }

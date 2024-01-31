@@ -178,6 +178,13 @@ public class UserController {
 //    }
 
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    @GetMapping("/mypage")
+    public String get_my_page_view(@AuthenticationPrincipal UserDTO userDTO) {
+
+        return "user/my-page";
+    }
+
 
 
 

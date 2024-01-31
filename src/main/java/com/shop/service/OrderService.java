@@ -26,12 +26,12 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ShoppingCartMapper shoppingCartMapper;
 
-    public void get_order(int orderNo, UserDTO userDTO) {
-        orderMapper.get_order(OrderDTO.builder()
-//                .no(orderNo)
-                .user(userDTO)
-                .build());
-    }
+//    public void get_order(int orderNo, UserDTO userDTO) {
+//        orderMapper.get_order(OrderDTO.builder()
+////                .no(orderNo)
+//                .user(userDTO)
+//                .build());
+//    }
 
     public List<ShoppingCartDTO> get_order_of_shopping_cart(List<Integer> orderNums, UserDTO userDTO) {
         return shoppingCartMapper.get_shopping_cart_by_user(userDTO, orderNums);
@@ -62,6 +62,10 @@ public class OrderService {
         ).toList());
 
 
+        System.out.println(orderDTO);
+
+        List<ShoppingCartDTO> cartList = shoppingCartMapper.select_cart_list_by_cartNo(cartNumbers);
+
 
         int price = orderMapper.get_request_price(cartNumbers);
 
@@ -72,7 +76,7 @@ public class OrderService {
         // 해당 유저의 ORDER 작성
         orderMapper.create_order(orderDTO);
         // 해당 유저의 ORDER 세부 정보 작성
-        orderMapper.create_order_cart(orderDTO);
+        orderMapper.create_order_product(orderDTO);
 
 
 
@@ -109,6 +113,11 @@ public class OrderService {
 
     }
 
+
+//    // 사용자의 주문 정보 전부 가져오기
+//    public List<OrderDTO> get_orders(UserDTO userDTO) {
+//
+//    }
 
 
 }

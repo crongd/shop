@@ -6,12 +6,34 @@
     <title>Title</title>
 <!--    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>-->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 
 <body>
-
+    <canvas id="chart" width="300" height="100"></canvas>
 </body>
 <script>
+    let myCt = document.getElementById('chart');
+
+    let myChart = new Chart(myCt, {
+        type: 'line',
+        data: {
+            labels: ['2020', '2021', '2022', '2023'], // x축 데이터
+            datasets: [ // 데이터의 속성
+                {
+                    label: 'Dataset', // 축의 제목
+                    fill: false, // line 형태일 때, 선 안쪽을 채우는지 여부
+                    data: [10,20,30,40], // dataset 값
+                    backgroundColor: '#00C7E2', // dataset 배경색
+                    borderColor: 'white', // dataset 테두리 색상
+                    borderWidth: 2, // dataset 테두리 두께
+                    maxBarThickness: 30 // 최대 bar의 두께 설정
+                }
+            ]
+        }
+    });
+
+
     IMP.init('imp07007375')
     const csrfToken = document.querySelector('meta[name=_csrf]').content;
 

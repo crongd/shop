@@ -32,7 +32,7 @@ public class OrderController {
             Model model
     ) {
 
-        orderService.get_order(orderNo, userDTO);
+//        orderService.get_order(orderNo, userDTO);
     }
 
     // 장바구니에 있는 내용들을 주문/결제 목록(DB)에 넣고 주문/결제 창으로 이동

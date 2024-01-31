@@ -22,4 +22,6 @@ public interface ShoppingCartMapper {
     void delete_product(ShoppingCartDTO shoppingCartDTO);
 
     void delete_cart_by_no(@Param("userId") String userId,@Param("cartNo") int cartNo);
+
+    List<ShoppingCartDTO> select_cart_list_by_cartNo(List<Integer> cartNo);
 }

@@ -24,11 +24,6 @@ public class MainController {
         return "test";
     }
 
-//    @RequestMapping(value = "/test")
-//    public String ssss () {
-//        System.out.println("들어옴");
-//        return "test";
-//    }
 
 
 }
