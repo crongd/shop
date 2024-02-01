@@ -9,9 +9,15 @@ import java.util.stream.Stream;
 public class ㅇㅇㅇㅇㅇ {
 //    static String a = "";
     // 팰린드롬
-    public static int sol(String s) {
+    public static String sol(String s) {
 
         String result = "";
+
+//        if (s.length() == 2){
+//            char a = s.charAt(0);
+//            char b = s.charAt(1);
+//            return a == b ? 2 : 1;
+//        }
 
         for (int i = 0; i < s.length(); i++) {
             for (int j = i + 1; j < s.length() + 1; j++) {
@@ -34,7 +40,7 @@ public class ㅇㅇㅇㅇㅇ {
 
         System.out.println("result: " + result);
 
-        return result.length();
+        return result;
 
     }
 
