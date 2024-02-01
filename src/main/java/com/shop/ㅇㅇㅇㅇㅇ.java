@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public class ㅇㅇㅇㅇㅇ {
 //    static String a = "";
     // 팰린드롬
-    public static String sol(String s) {
+    public static int sol(String s) {
 
         String result = "";
 
@@ -23,16 +23,7 @@ public class ㅇㅇㅇㅇㅇ {
                     System.out.println("val가 이거라 continue: " + val);
                     continue;
                 }
-                for (int k = 0; k < val.length()/2; k++) {
-                    // val
-                    char first = val.charAt(k);
-                    char last = val.charAt((val.length()-1) -k);
-                    System.out.println("first: " + first);
-                    System.out.println("last: " + last);
-                    if (first != last) {
-                        System.out.println("같지 않아서 break");
-                        continue;
-                    }
+                if (check(val)) {
                     if (val.length() > result.length()) {
                         result = val;
                     }
@@ -43,7 +34,7 @@ public class ㅇㅇㅇㅇㅇ {
 
         System.out.println("result: " + result);
 
-        return result;
+        return result.length();
 
     }
 
@@ -59,7 +50,7 @@ public class ㅇㅇㅇㅇㅇ {
     }
 
     public static void main(String[] args) {
-        System.out.println(sol("abcbabc"));
+        System.out.println(sol("serthtrss"));
 //        if (val.length() % 2 == 0) { //짝수면
 //
 //        } else { //홀수면
