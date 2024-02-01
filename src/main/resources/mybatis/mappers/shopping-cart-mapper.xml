@@ -138,10 +138,36 @@
     </select>
 
 
-    <select id="select_cart_list_by_userId" resultType="com.shop.dto.shopping.OrderDTO" >
-        select * from `order` where user_id=#{id}
-    </select>
+    <resultMap id="my_page_detail_resultMap" type="com.shop.dto.shopping.ShoppingCartDTO">
+        <result property="amount" column="order_amount" javaType="int" />
+        <association property="product" javaType="com.shop.dto.product.ProductDTO" autoMapping="true">
+            <id property="no" column="p_no" />
+            <collection property="productOptions" javaType="list" ofType="com.shop.dto.product.ProductOptionDTO" autoMapping="true">
+                <id property="no" column="po.no" />
+                <result property="name" column="option_name" />
+            </collection>
+        </association>
+    </resultMap>
 
+
+    <select id="get_my_page_detail_data" resultMap="my_page_detail_resultMap" >
+        select
+        *,
+        p.no as p_no,
+        po.no as po_no,
+        po.name as option_name,
+        op.amount as order_amount
+        from `order` o
+        inner join order_product op
+        on o.order_id=op.order_id
+        inner join product p
+        on op.product_no=p.no
+        left outer join product_option po
+        on op.product_option=po.no
+        <where>
+            o.order_id=#{orderId} and o.user_id=#{user.id}
+        </where>
+    </select>
 
 
 </mapper>

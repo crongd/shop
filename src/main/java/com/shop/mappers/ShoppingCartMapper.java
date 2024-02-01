@@ -25,5 +25,6 @@ public interface ShoppingCartMapper {
     void delete_cart_by_no(@Param("userId") String userId,@Param("cartNo") int cartNo);
 
     List<ShoppingCartDTO> select_cart_list_by_cartNo(List<Integer> cartNo);
-    List<OrderDTO> select_cart_list_by_userId(UserDTO userDTO);
+
+    List<ShoppingCartDTO> get_my_page_detail_data(@Param("user") UserDTO userDTO,@Param("orderId") String orderId);
 }

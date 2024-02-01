@@ -86,10 +86,11 @@ class ShoppingMallApplicationTests {
 //        List<ShoppingCartDTO> list = shoppingCartMapper.select_cart_list_by_cartNo(cartNo);
 
 //        List<OrderDTO> list = shoppingCartMapper.select_cart_list_by_userId(UserDTO.builder().id("jaeho9859").build());
-        List<OrderDTO> list = orderMapper.get_orders();
-
-        System.out.println(list);
-
+//        List<OrderDTO> list = orderMapper.get_orders();
+//
+//        System.out.println(list);
+//        List<ShoppingCartDTO> list = shoppingCartMapper.get_my_page_detail_data();
+//        System.out.println(list);
 
     }
 

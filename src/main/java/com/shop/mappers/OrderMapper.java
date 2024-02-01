@@ -21,7 +21,7 @@ public interface OrderMapper {
 //    void create_order_option(OrderDTO orderDTO);
 
 
-    List<OrderDTO> get_orders();
+    List<OrderDTO> get_orders(UserDTO userDTO);
 
     int get_request_price(List<Integer> cartNO);
 

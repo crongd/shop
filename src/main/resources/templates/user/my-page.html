@@ -10,7 +10,8 @@
 
 <div class="my-info-container">
     <section class="my-info-section">
-        <div id="my-icon" th:style='|background-image: url(${user.imageFile})|'></div>
+<!--        th:style='|background-image: url(${user.imageFile})|'-->
+        <div id="my-icon"></div>
         <div class="my-info">
             <span th:text="${user.id}+ '님 ㅎㅇ요'">jaeho9859님 ㅎㅇ</span>
             <a href="#">회원정보 수정</a>
@@ -58,19 +59,19 @@
 
         <section class="order-list-section">
             <ul>
-                <li th:each="order : ${orders}">
+                <li class="order-list" th:each="order : ${orders}">
                     <div class="order-number">
                         <span>주문번호:</span>
-                        <a href="#" th:text="${order.merchantUid}">123457899</a>
+                        <a href="#" class="order-merchantUid" th:text="${order.merchantUid}">123457899</a>
                     </div>
 
                     <div class="order-summary">
                         <div class="order-major-img">
-                            <img th:src="${order.shoppingCarts[0].product.mainImg}" alt="">
+                            <img th:src="${order.shoppingCarts[order.shoppingCarts.size()-1].product.mainImg}" alt="">
                         </div>
                         <div class="order-info">
                             <span class="order-title" th:text="${order.name}">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
-                            <span class="order-date" th:text="${order.createdAt}">2023.12.21</span>
+                            <span class="order-date" th:text="${#temporals.format(order.createdAt, 'yyyy.MM.dd')}">2023.12.21</span>
                             <span class="order-total-price" th:text="${#numbers.formatInteger(order.amount, 0, 'COMMA')} + '원'">30,000원</span>
                             <span class="order-status order-complete">결제완료</span>
                             <div>
@@ -90,61 +91,110 @@
     <section class="order-detail-product-section">
 
         <table>
-            <caption>주문상품</caption>
+           <caption>주문상품</caption>
             <thead>
-            <tr>
-                <th>순번</th>
-                <th>이미지</th>
-                <th>상품명</th>
-                <th>가격</th>
-                <th>수량</th>
-                <th>총가격</th>
-            </tr>
+                <tr>
+                    <th>순번</th>
+                    <th>이미지</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총가격</th>
+                </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td class="product-no">1</td>
-                <td class="product-img">
-                    <img src="https://www.pokemoncenter-online.com/static/product_image/4521329403496/4521329403496.jpg" alt="#">
-                </td>
-                <td class="product-summary">
-                    <div class="title">ハンドタオル Whats your charm point? ピカチュウ</div>
-                    <div class="sub-title">(ハンドタオル Whats your charm point? ピカチュウ)</div>
-                </td>
-                <td class="product-price">8,800원</td>
-                <td class="product-amount">4</td>
-                <td id="product-total-price" rowspan="100">5411452원</td>
-            </tr>
-            <tr>
-                <td class="product-no">2</td>
-                <td class="product-img">
-                    <img src="https://www.pokemoncenter-online.com/static/product_image/4521329391465/4521329391465_S.jpg" alt="#">
-                </td>
-                <td class="product-summary">
-                    <div class="title">ハンドタオル Whats your charm point? ピカチュウ</div>
-                    <div class="sub-title">(ハンドタオル Whats your charm point? ピカチュウ)</div>
-                </td>
-                <td class="product-price">121,000원</td>
-                <td class="product-amount">10</td>
-            </tr>
+            <tbody id='detail-body'>
+
             </tbody>
         </table>
-
-        <table>
-            <caption></caption>
-        </table>
-
 
     </section>
 </div>
 
 
 
-
-
-
-
 </body>
+
+<script>
+    const orderList = document.querySelectorAll('.order-list');
+    const detailContainer = document.querySelector('.order-detail-container');
+    const detailSection = document.querySelector('.order-detail-product-section');
+    const detailContainerBtn = document.querySelector('#order-detail-close-btn');
+
+    detailContainerBtn.onclick = () => {
+        detailContainer.style.display = 'none';
+    }
+
+
+    [...orderList].forEach(product => {
+        const detailBtn = product.querySelector('.order-detail-btn');
+        const merchantUid = product.querySelector('.order-merchantUid').innerText;
+        console.log(merchantUid)
+
+
+
+        detailBtn.onclick = () => {
+            console.log('클릭 됨?')
+            fetch(`/user/mypage/detail/${merchantUid}`)
+                .then(resp => {
+                    if (resp.ok) {
+                        return resp.json()
+                    } else {
+                        alert('요청이 이상함')
+                    }
+                })
+                .then(value => {
+                    detailSection.innerHTML = `<table>
+           <caption>주문상품</caption>
+            <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>이미지</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총가격</th>
+                </tr>
+            </thead>
+            <tbody id='detail-body'>
+
+            </tbody>
+        </table>`;
+                    const body = document.querySelector('#detail-body');
+                    let no = 1;
+                    for (product of value) {
+                        let options = '';
+                        if(product.product.productOptions[0].name != null){
+                            options = `<div class="sub-title">옵션 : ${product.product.productOptions[0].name}</div>`;
+                        }
+                        body.insertAdjacentHTML('beforeend', `<tr>
+                        <td class="product-no">${no}</td>
+                        <td class="product-img">
+                            <img src="${product.product.mainImg}" alt="대표 이미지">
+                        </td>
+                        <td class="product-summary">
+                            <div class="title">${product.product.title}</div>
+                            ${options}
+                        </td>
+                        <td class="product-price">${product.product.price.toLocaleString('ko-KR')+ '원'}</td>
+                        <td class="product-amount">${product.amount}</td>
+                        <td class="total-price">${(product.product.price * product.amount).toLocaleString('ko-KR') + '원'}</td>
+                    </tr>`)
+
+                        no++;
+                    }
+
+                    detailContainer.style.display = 'block';
+
+                })
+        }
+    })
+
+</script>
+
+
+
+
+
 
 
 <style>

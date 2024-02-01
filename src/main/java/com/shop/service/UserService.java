@@ -90,8 +90,15 @@ public class UserService {
 
 
 
+    // 마이페이지 본인 물건 조회
     public List<OrderDTO> get_my_page_data(UserDTO userDTO) {
-        return orderMapper.get_orders();
+        return orderMapper.get_orders(userDTO);
+    }
+
+
+
+    public List<ShoppingCartDTO> get_my_page_detail_data(UserDTO userDTO, String orderId) {
+        return shoppingCartMapper.get_my_page_detail_data(userDTO, orderId);
     }
 
 
