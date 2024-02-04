@@ -26,6 +26,7 @@ public class ㅇㅇㅇㅇㅇ {
 //                System.out.println("val:" + val);
 //                System.out.println(i + " " + j);
 
+
                 if ((j-i) <= 1 || (j-i) <= result.length()) {
                     System.out.println("val가 이거라 continue: " );
                     continue;
@@ -110,19 +111,20 @@ public class ㅇㅇㅇㅇㅇ {
 
     // 다이나믹
     static int dynamic(int n) {
-        int[] pibonacci = new int[100000];
+        int[] pibonacci = new int[n+1];
         pibonacci[0] = 1;
         pibonacci[1] = 1;
         for (int i = 2; i < n; i++) {
-            pibonacci[i] = pibonacci[i - 1] + pibonacci[i - 2] % 1234567;
+            pibonacci[i] = (pibonacci[i - 1] + pibonacci[i - 2]) % 1234567;
         }
         System.out.println(pibonacci[n-1]);
-        return pibonacci[n-1] % 1234567;
+        return pibonacci[n-1];
     }
 
     // 하노이 자식의 탑
     static int count = 1;
 
+    // 최소 횟수만 구할 때
     static int hanoi(int n) {
         // 규칙만 알긴한데...
         if (n != 1) {
@@ -132,26 +134,53 @@ public class ㅇㅇㅇㅇㅇ {
             return count;
         }
     }
-    
-    static void move_tower(int n, char A, char B, char C) {
+
+
+    static List<int[]> list = new ArrayList<>();
+    // 쌤의 하노이의 탑
+    static int[][] hanoi_result(int n) {
+
+        move_tower(n, 1, 2, 3);
+
+        int[][] result = new int[list.size()][2];
+        for (int i = 0; i < list.size(); i++) {
+            int[] value = list.get(i);
+            result[i][0] = value[0];
+            result[i][1] = value[1];
+        }
+
+        return result;
+    }
+
+    static void move_tower(int n, int from, int by, int to) {
+        int[] move = {from, to};
+
         if (n == 1) {
-            System.out.printf("원판 %d을 %c에서 %c로 이동시킴\n", n, A, C);
+//            System.out.printf("if 원판 %d을 %c에서 %c로 이동시킴\n", n, A, C);
+            list.add(move);
         } else {
             // 1. 맨 아래 원판을 제외한 n-1개의 원판을 from에서 by로 이동시킴
-            move_tower(n-1, A, B, C);
+            move_tower(n-1, from, to, by);
+            list.add(move);
             // 2. 남은 하나의 원판을 from에서 to로 이동시켰다! a -> c
-            System.out.printf("원판 %d을 %c에서 %c로 이동시킴\n", n, A, C);
+//            System.out.printf("else 원판 %d을 %c에서 %c로 이동시킴\n", n, A, C);
             // 3. 1번에서 잠깐 옮겨놨던 n-1개의 원판을 큰 원판 위로 이동 b -> c
-            move_tower(n-1, B, A, C);
+            move_tower(n-1, by, from, to);
         }
     }
+
+
+
+    //////////////////////////////
 
 
     public static void main(String[] args) {
 //        System.out.println(sol("abcabcdcba"));
 //        System.out.println(hanoi(10));
 
-        move_tower(3, 'A', 'B', 'C');
+//        move_tower(3, 'A', 'B', 'C');
+
+        System.out.println(Arrays.deepToString(hanoi_result(2)));
 
 //        System.out.println(abc(1, 1, 27));
 
