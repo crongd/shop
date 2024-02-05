@@ -5,6 +5,7 @@ import org.springframework.security.core.parameters.P;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class ㅇㅇㅇㅇㅇ {
@@ -173,6 +174,126 @@ public class ㅇㅇㅇㅇㅇ {
 
     //////////////////////////////
 
+    //내적
+    static int sowjr(int[] a, int[] b) {
+        int[] result = new int[a.length];
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i] * b[i];
+        }
+        return (int) Arrays.stream(result).asLongStream().sum();
+    }
+
+    // 행렬의 덧셈
+    static int[][] sum(int[][] arr1, int[][] arr2) {
+        int[][] result = new int[arr1.length][arr1[0].length];
+        for (int i = 0; i < arr1.length; i++) {
+            for (int j = 0; j < arr1[i].length; j++) {
+                result[i][j] = arr1[i][j] + arr2[i][j];
+            }
+        }
+        return result;
+    }
+
+    // 같은 숫자는 싫어 (스택/큐)
+    static int[] stack(int[] arr) {
+//        return Arrays.stream(arr).distinct().toArray();
+
+//        Set<Integer> integerSet = new HashSet<>();
+//
+//        for (int i = 0; i < arr.length; i++) {
+//            integerSet.add(arr[i]);
+//        }
+//
+//        int[] result = new int[integerSet.size()];
+//        int index = 0;
+//        for (int i: integerSet) {
+//            result[index++] = i;
+//        }
+//        return result;
+
+
+        return IntStream.range(0, arr.length).filter(i -> i == 0 || arr[i+1] != arr[i]).map(i -> arr[i]).toArray();
+    }
+
+    // 3진법 뒤집기
+    static int jin3(int n) {
+        String str = "";
+        while (n != 0) {
+            str += n % 3;
+            System.out.println(str);
+            n /= 3;
+        }
+        return Integer.parseInt(str, 3);
+    }
+
+    // 크기가 작은 부분 문자열
+    static int subString(String t, String p) {
+        int count = 0;
+        for (int i = 0; i < t.length() - p.length() + 1; i++) {
+            Long a = Long.parseLong(t.substring(i, i+p.length()));
+            System.out.println(a);
+            if (a <= Long.parseLong(p)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //최소 직사각형
+    static int min(int[][] sizes) {
+        int xMin = sizes[0][0];
+        int xMax = 0;
+
+        int yMin = sizes[0][1];
+        int yMax = 0;
+        for (int i = 0; i < sizes.length; i++) {
+            if (sizes[i][0] < sizes[i][1]) {
+                int tmp = sizes[i][1];
+                sizes[i][1] = sizes[i][0];
+                sizes[i][0] = tmp;
+            }
+
+            if (sizes[i][0] < xMin) {
+                xMin = sizes[i][0];
+            } else if (sizes[i][0] > xMax) {
+                xMax = sizes[i][0];
+            }
+
+            if (sizes[i][1] < yMin) {
+                yMin = sizes[i][1];
+            } else if (sizes[i][1] > yMax) {
+                yMax = sizes[i][1];
+            }
+        }
+        return xMax * yMax;
+    }
+
+    // 시저 암호
+    static String pass(String s, int n) {
+        char[] arr = s.toCharArray();
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == ' ') {
+                arr[i] = ' ';
+            } else {
+                if (arr[i] <= 90) {
+                    arr[i] += n;
+                    if (arr[i] > 90) {
+                        arr[i] -= 26;
+                    }
+                } else {
+                    arr[i] += n;
+                    if (arr[i] > 122) {
+                        arr[i] -= 26;
+                    }
+                }
+            }
+        }
+        return String.valueOf(arr);
+    }
+
+
+
 
     public static void main(String[] args) {
 //        System.out.println(sol("abcabcdcba"));
@@ -180,7 +301,35 @@ public class ㅇㅇㅇㅇㅇ {
 
 //        move_tower(3, 'A', 'B', 'C');
 
-        System.out.println(Arrays.deepToString(hanoi_result(2)));
+        // 하노이
+//        System.out.println(Arrays.deepToString(hanoi_result(2)));
+//        int[][] param1 = new int[2][2];
+        int[][] a = {{1, 2}, {2, 3}};
+        int[][] b = {{3, 4},{5, 6}};
+
+
+        // 같은 숫자는 싫어 (스택/큐)
+//        System.out.println(Arrays.deepToString(sum(a, b)));
+
+        int[] param1 = new int[]{1,1,3,3,0,1,1};
+//        System.out.println(Arrays.toString(stack(param1)));
+
+        // 3진법 뒤집기
+//        System.out.println(jin3(45));
+
+        // 크기가 작은 부분 문자열
+//        System.out.println(subString("10203", "15"));
+
+        // 최소 직사각형
+        int[][] param2 = {{60, 50},{30, 70},{60, 30},{80, 40}};
+//        System.out.println(min(param2));
+
+        System.out.println(pass("a B z",4));
+
+
+
+//        int a = 1*(-3) + 2*(-1) + 3*0 + 4*2;
+//        System.out.println(a);
 
 //        System.out.println(abc(1, 1, 27));
 
