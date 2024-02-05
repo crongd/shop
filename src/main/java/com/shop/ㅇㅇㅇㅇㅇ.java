@@ -324,6 +324,7 @@ public class ㅇㅇㅇㅇㅇ {
         int[][] param2 = {{60, 50},{30, 70},{60, 30},{80, 40}};
 //        System.out.println(min(param2));
 
+        // 시저 암호
         System.out.println(pass("a B z",4));
 
 
