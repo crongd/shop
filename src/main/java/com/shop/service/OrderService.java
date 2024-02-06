@@ -11,9 +11,15 @@ import com.shop.mappers.OrderMapper;
 import com.shop.mappers.ShoppingCartMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,6 +42,7 @@ public class OrderService {
     public List<ShoppingCartDTO> get_order_of_shopping_cart(List<Integer> orderNums, UserDTO userDTO) {
         return shoppingCartMapper.get_shopping_cart_by_user(userDTO, orderNums);
     }
+
 
     @Transactional
     public boolean create_order(UserDTO userDTO, String orderDataString, List<Integer> cartNumbers) throws JsonProcessingException {

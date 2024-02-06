@@ -8,14 +8,18 @@ import com.shop.mappers.OrderMapper;
 import com.shop.mappers.ProductMapper;
 import com.shop.mappers.ShoppingCartMapper;
 import com.shop.mappers.UserMapper;
+import com.shop.service.OrderService;
 import com.shop.service.PortOneService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class ShoppingMallApplicationTests {
@@ -35,10 +39,29 @@ class ShoppingMallApplicationTests {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private OrderService orderService;
+
+//    static Map<String, String> getUser() {
+//        List<Map<String, Object>> result =
+//    }
+
     @Test
     void contextLoads() {
+
 //        ProductDTO aa = productMapper.get_product_by_no(500);
 
+
+//        System.out.println(orderMapper.test());
+
+        List<Map<String, String>> results = orderMapper.test();
+        System.out.println("reslts" + results);
+        Map<String, String> resultMap = new HashMap<>();
+        for(Map<String, String> value : results) {
+            resultMap.put(value.get("id"), value.get("password"));
+        }
+
+        System.out.println("resultMap" + resultMap);
 
 //        System.out.println(productMapper.get_product_by_category(7, "price"));
 //

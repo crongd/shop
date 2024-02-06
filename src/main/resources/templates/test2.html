@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+
+
+</body>
+</html>
+<script>
+    fetch('/test2')
+    .then(resp => {
+        return resp.json();
+    })
+    .then(value => {
+        console.log(value)
+    })
+</script>
