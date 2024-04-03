@@ -19,14 +19,14 @@
     </section>
 </div>
 
+<nav class="my-menu-list-nav">
+    <ul>
+        <li active onclick="location.href='/user/mypage'">구매내역</li>
+        <li onclick="location.href='/user/wish-list'">찜 목록</li>
+        <li>배송지목록</li>
+    </ul>
+</nav>
 <main>
-    <nav class="my-menu-list-nav">
-        <ul>
-            <li active>구매내역</li>
-            <li>찜</li>
-            <li>배송지목록</li>
-        </ul>
-    </nav>
 
     <div class="my-order-container">
         <h1>구매내역</h1>
@@ -70,7 +70,7 @@
                             <img th:src="${order.shoppingCarts[order.shoppingCarts.size()-1].product.mainImg}" alt="">
                         </div>
                         <div class="order-info">
-                            <span class="order-title" th:text="${order.name}">「結束バンドLIVE-恒星-」ライブロゴTシャツ（4サイズ）</span>
+                            <span class="order-title" th:text="${order.name}">주문 title</span>
                             <span class="order-date" th:text="${#temporals.format(order.createdAt, 'yyyy.MM.dd')}">2023.12.21</span>
                             <span class="order-total-price" th:text="${#numbers.formatInteger(order.amount, 0, 'COMMA')} + '원'">30,000원</span>
                             <span class="order-status order-complete">결제완료</span>
@@ -249,6 +249,7 @@
     main{
         padding: 20px 100px;
     }
+
     .my-menu-list-nav > ul{
         border-bottom: 2px solid black;
     }

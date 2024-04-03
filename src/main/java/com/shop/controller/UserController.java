@@ -1,5 +1,6 @@
 package com.shop.controller;
 
+import com.shop.dto.product.ProductDTO;
 import com.shop.dto.shopping.OrderDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
@@ -135,12 +136,13 @@ public class UserController {
 
 
 
+
     @PostMapping("/cart")
     @ResponseBody
     public String add_shopping_cart(
             @AuthenticationPrincipal UserDTO userDTO,
             @RequestBody ShoppingCartDTO shoppingCartDTO
-    ){
+    ) {
         System.out.println(userDTO);
         System.out.println(shoppingCartDTO);
 
@@ -177,6 +179,40 @@ public class UserController {
 //    public void insert_product_cart(@PathVariable int productNo, @PathVariable String productOption) {
 //
 //    }
+
+
+    /**************************************** WISH LIST *************************/
+    @GetMapping("wish-list")
+    public String wish_list_view(@AuthenticationPrincipal UserDTO userDTO, Model model) {
+        System.out.println(userDTO);
+        model.addAttribute("user", userDTO);
+        model.addAttribute("wishList", userService.get_wish_list(userDTO));
+        return "main/wish-list";
+    }
+
+    @PostMapping("/wish-list")
+    @ResponseBody
+    public String wish_list_add(
+            @AuthenticationPrincipal UserDTO userDTO,
+            @RequestBody int productNo
+    ) {
+        System.out.println(userDTO);
+        System.out.println(productNo);
+        userService.add_wish_list(userDTO, productNo);
+        // 유저 찜목록 창으로 이동시킨다
+        return "redirect:user/wish-list";
+    }
+
+    @DeleteMapping("/wish-list")
+    @ResponseBody
+    public void wish_list_delete(
+            @AuthenticationPrincipal UserDTO userDTO,
+            @RequestBody int productNo
+    ) {
+        System.out.println(userDTO);
+        System.out.println(productNo);
+        userService.delete_wish_list(userDTO, productNo);
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////

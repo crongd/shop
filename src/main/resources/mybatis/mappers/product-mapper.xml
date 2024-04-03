@@ -10,6 +10,7 @@
             <id property="no" column="category_no" />
         </association>
 
+
         <collection property="productImages" ofType="com.shop.dto.ImageFileDTO" javaType="list" autoMapping="true">
             <id property="no" column="image_no" />
             <result property="savedFileName" column="product_img" />
@@ -20,18 +21,30 @@
             <result property="name" column="name" />
             <result property="additionalPrice" column="additional_price" />
         </collection>
+
+        <collection property="reviews" ofType="com.shop.dto.product.ReviewDTO" javaType="list" autoMapping="true">
+            <id property="no" column="review_no" />
+            <result property="averageRate" column="averageRate" />
+            <result property="productNo" column="" />
+            <result property="writeDate" column="" />
+        </collection>
+
     </resultMap>
 
     <select id="get_product_by_no" resultMap="product_result_map" >
         select *,
         p.no as product_no,
         pi.no as image_no,
-        po.no as option_no
+        po.no as option_no,
+        r.no as review_no,
+        (select avg(rate) from review where product_no = #{no}) as averageRate
         from product p
         left outer join product_img pi
         on p.no = pi.product_no
         left outer join `product_option` po
         on p.no = po.product_no
+        left outer join review r
+        on p.no = r.product_no
         where p.no = #{no}
         order by pi.no;
     </select>

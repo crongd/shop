@@ -47,7 +47,7 @@
         padding: 0 20px;
         border: 1px solid black;
         width: 600px;
-
+        height: 450px;
     }
 
     .btn {
@@ -110,6 +110,7 @@
 
     .item-title {
         text-align: left;
+        padding: 5px;
     }
 
     .main-container {
@@ -123,15 +124,33 @@
     }
 
 
+    #logo {
+        display: block;
+
+        width: 300px;
+        height: 80px;
+        /*border: 1px solid black;*/
+        background-image: url("https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDNfMTAg/MDAxNTgwNzEwMzY5MjM0.hlBG7FOVi0fIA6WURszqg0T_eK3hun4H9uv2iByqpPUg.br7UJh8oWuzJ6ToXXwMaZQ7wWVezvCYUq1nUwWKPuXkg.PNG.louders33/1_04.png?type=w800");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /*margin: 5px 10px;*/
+        margin: 10px auto;
+    }
+
+
 </style>
 <body>
     <header>
-        <ul>
-            <li><a href="#">의류</a></li>
-            <li><a href="#">가전</a></li>
-            <li><a href="#">자동차용품</a></li>
-            <li><a href="#">반려동물</a></li>
-        </ul>
+        <a href="/">
+            <div id="logo"></div>
+        </a>
+<!--        <ul>-->
+<!--            <li><a href="#">의류</a></li>-->
+<!--            <li><a href="#">가전</a></li>-->
+<!--            <li><a href="#">자동차용품</a></li>-->
+<!--            <li><a href="#">반려동물</a></li>-->
+<!--        </ul>-->
     </header>
 
     <hr>
@@ -144,18 +163,18 @@
                     <th colspan="5">구매 목록</th>
                 </tr>
                 <tr style="height: 14px">
-                    <th id="item-check">선택</th>
+<!--                    <th id="item-check">선택</th>-->
                     <th id="item-img">상품 이미지</th>
-                    <th id="item-content">상품명 / 상품 옵션</th>
-                    <th id="item-price">가격 / 수량</th>
+                    <th id="item-content" style="width: 500px">상품명 / 상품 옵션</th>
+                    <th id="item-price" style="width: 100px">가격 / 수량</th>
                 </tr>
 
-                <tr style="border: 1px solid black; height: 50px" class="products" th:each="cart : ${cartList}">
-                    <td class="item-check"><label><input type="checkbox"></label></td>
-                    <td th:style="|'background-image:url('${cart.product.mainImg}');'|"><img th:src="${cart.product.mainImg}" alt=""></td>
+                <tr style="border: 1px solid black;" class="products" th:each="cart : ${cartList}">
+<!--                    <td class="item-check"><label><input type="checkbox"></label></td>-->
+                    <td th:style="|'background-image:url('${cart.product.mainImg}');'|"><img th:src="${cart.product.mainImg}" alt="상품 메인 이미지"></td>
                     <td class="item-content">
                         <h3 class="item-title" th:text="${cart.product.title}">상품명</h3> <br>
-                        <p class="item-body" th:if="${cart.product.productOptions.size() != 0}" th:text="${cart.product.productOptions[0].name}"></p>
+                        <p class="item-body" th:if="${cart.product.productOptions.size() != 0}" th:text="'옵션: ' + ${cart.product.productOptions[0].name}"></p>
                     </td>
                     <td class="item-price">
                         <div th:text="${#numbers.formatInteger(cart.product.price, 0, 'COMMA')} + '원'">10,000원</div>

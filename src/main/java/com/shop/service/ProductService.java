@@ -15,6 +15,7 @@ public class ProductService {
 
     public ProductDTO get_product(int no) {
         return productMapper.get_product_by_no(no);
+//        return null;
     }
 
     public List<ProductDTO> all_products(int no, String searchWord, String order){

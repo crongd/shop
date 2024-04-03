@@ -25,5 +25,6 @@ public class ProductDTO {
 
     private List<ImageFileDTO> productImages;
     private List<ProductOptionDTO> productOptions;
+    private List<ReviewDTO> reviews;
 
 }

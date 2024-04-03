@@ -411,6 +411,7 @@
     const [allVal, clothesVal, electronicsVal, carVal, petVal] = document.querySelectorAll('.category-value');
     const searchBtn = document.querySelector('#search-button');
     const nowCategory = document.querySelector('#now-category');
+
     const categoryContainer = document.querySelector('.category-list-ul');
 
     searchBtn.onclick = () => {
@@ -419,7 +420,7 @@
         }  else {
             product_by_category(nowCategory.value)
         }
-        searchInput.innerHTML = "";
+        searchInput.value = '';
     }
 
     // 첫페이지에 무조건 실행

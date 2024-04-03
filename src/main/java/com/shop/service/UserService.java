@@ -7,6 +7,7 @@ import com.shop.dto.user.UserDTO;
 import com.shop.mappers.OrderMapper;
 import com.shop.mappers.ShoppingCartMapper;
 import com.shop.mappers.UserMapper;
+import com.shop.mappers.WishListMapper;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONArray;
@@ -43,6 +44,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RestOperations restOperations;
     private final OrderMapper orderMapper;
+    private final WishListMapper wishListMapper;
 
 
     // 회원가입
@@ -103,6 +105,18 @@ public class UserService {
 
 
 
+    // wish list
+    public List<ProductDTO> get_wish_list(UserDTO userDTO) {
+        return wishListMapper.wish_list_get(userDTO);
+    }
+
+    public void add_wish_list(UserDTO userDTO, int productNo) {
+        wishListMapper.wish_list_add(userDTO, productNo);
+    }
+
+    public void delete_wish_list(UserDTO userDTO, int productNo) {
+        wishListMapper.wish_list_delete(userDTO, productNo);
+    }
 
 
 

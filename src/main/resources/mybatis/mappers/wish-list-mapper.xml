@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.mappers.WishListMapper" >
+
+    <select id="wish_list_get" resultType="com.shop.dto.product.ProductDTO" >
+        SELECT p.no, p.title, p.price, p.main_img FROM wishlist wl
+        inner join product p
+        on wl.product_no = p.no
+        where wl.user_id = #{id}
+    </select>
+
+    <insert id="wish_list_add">
+        insert into wishlist(user_id, product_no) values(#{user.id}, #{productNo});
+    </insert>
+
+    <delete id="wish_list_delete">
+        delete from wishlist where user_id = #{user.id} and product_no = #{productNo};
+    </delete>
+
+</mapper>

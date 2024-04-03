@@ -227,7 +227,7 @@
     <!--                </label>-->
                         <br>
                         <div class="remote-container">
-                            <button type="button" class="btn"><i class="fa-regular fa-heart"></i>찜!</button>
+                            <button type="button" class="btn" id="wish-btn"><i class="fa-regular fa-heart"></i>찜!</button>
                             <button type="button" class="btn" id="cart-btn"><i class="fa-solid fa-basket-shopping"></i>장바구니</button>
                             <button type="button" class="btn"><i class="fa-regular fa-credit-card"></i>구매</button>
                         </div>
@@ -255,12 +255,16 @@
             <div class="review">
                 <div>전체 리뷰수</div>
                 <div><i class="fa-regular fa-comment"></i></div>
-                <div>100</div>
+                <div th:text="${product.reviews.size()}">100</div>
             </div>
             <div class="review">
                 <div>사용자 평점</div>
                 <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                <div><span>3</span> <span style="color: darkgray">/ 5</span></div>
+                <div>
+                    <span th:if="${product.reviews.size() != 0}" th:text="${product.reviews[0].averageRate}">3</span>
+                    <span th:if="${product.reviews.size() == 0}">0</span>
+                    <span style="color: darkgray">/ 5</span>
+                </div>
             </div>
             <a href="#" class="a-tag">평점순</a> /
             <a href="#" class="a-tag">인기순</a> /
@@ -324,6 +328,7 @@
 <script>
     // 상단 이동 스크롤 버튼 js
     const topBtn = document.querySelector('.top-btn');
+    const wishBtn = document.querySelector('#wish-btn');
     const cartBtn = document.querySelector('#cart-btn');
     const formElem = document.forms.item(0);
     const productNo = document.querySelector('#product-no');
@@ -350,6 +355,28 @@
     //     console.log('존재해서 값 넣음')
     //     productOption = document.querySelector('.option');
     // }
+
+
+    // 찜 버튼 클릭시
+    wishBtn.onclick = () => {
+        fetch(`/user/wish-list`, {
+            method: 'post',
+            headers: {"Content-Type":"application/json","X-Csrf-Token": csrf.value},
+            body: JSON.stringify(productNo.value)
+        })
+            .then(response => {
+                if(response.redirected){
+                    alert('로그인이 필요함');
+                    location.href = response.url;
+                    return;
+                }
+
+                if (confirm('찜목록에 추가했습니다. 확인 하실래요?')) {
+                    location.href = response.url;
+                }
+
+            })
+    }
 
 
     cartBtn.onclick = () => {

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}">
+    <meta charset="UTF-8">
+    <title>관심목록</title>
+    <script src="https://kit.fontawesome.com/53e865f4e7.js" crossorigin="anonymous"></script>
+</head>
+<style>
+  * {
+    /*margin: 0;*/
+    /*padding: 0;*/
+  }
+
+  h1 {
+    text-align: center;
+    margin: 50px;
+    font-size: 3rem;
+  }
+
+  table {
+      width: 800px;
+      margin: 0 auto 20px;
+  }
+
+  i {
+      margin: 30px;
+      color: black;
+  }
+
+  table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+  }
+  td:nth-child(2){
+      width: 180px;
+      height: 180px;
+  }
+
+  #item-no {
+      width: 60px;
+  }
+
+  .item-no {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+  }
+
+  .item-content {
+      padding: 10px;
+  }
+
+  #item-price {
+      width: 135px;
+  }
+
+  .item-price {
+      text-align: center;
+  }
+
+
+
+
+  /************************************************************************************************************************/
+
+  .my-info-container{
+      background-image: linear-gradient(to right, #fc3d40, #fc6d5b 80%);
+      /*background-color: black;*/
+      padding: 20px 100px;
+      font-size: var(--text-large-size);
+      color: white;
+  }
+
+  .my-info-section{
+      display: flex;
+  }
+
+  #my-icon{
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border-radius: 5px;
+      background-position: center;
+      background-size: cover;
+      margin-right: 20px;
+  }
+  .my-info span{
+      display: block;
+      font-weight: bold;
+      font-size: var(--text-xlarge-size);
+      margin-bottom: 10px;
+  }
+  .my-info a{
+      font-size: var(--text-small-size);
+      padding: 8px 15px;
+      text-decoration: none;
+      border: 1px white solid;
+      border-radius: 5px;
+      /*background-color: cornflowerblue;*/
+      color: white;
+      font-weight: bold;
+  }
+
+  .my-info a:hover {
+      background-color: #ff9f86;
+  }
+
+
+
+/*  **************/
+  .my-menu-list-nav > ul{
+      border-bottom: 2px solid black;
+  }
+  .my-menu-list-nav li{
+      display: inline-block;
+      padding: 10px 10px;
+      font-size: var(--text-normal-size);
+      font-weight: bold;
+      margin-right: 10px;
+      cursor: pointer;
+  }
+
+  .my-menu-list-nav li:hover{
+      color: rgba(0,0,0,0.8);
+  }
+
+  .my-menu-list-nav li[active]{
+      border-bottom: 5px solid blue;
+  }
+
+
+</style>
+<body>
+    <main>
+        <div class="my-info-container">
+            <section class="my-info-section">
+                <!--        th:style='|background-image: url(${user.imageFile})|'-->
+                <div id="my-icon"></div>
+                <div class="my-info">
+                    <span th:text="${user.id}+ '님 ㅎㅇ요'">jaeho9859님 ㅎㅇ</span>
+                    <a href="#">회원정보 수정</a>
+                </div>
+            </section>
+        </div>
+
+        <nav class="my-menu-list-nav">
+            <ul>
+                <li onclick="location.href='/user/mypage'">구매내역</li>
+                <li active onclick="location.href='/user/wish-list'">찜 목록</li>
+                <li>배송지목록</li>
+            </ul>
+        </nav>
+
+
+        <table>
+            <tr>
+                <th id="item-no">순번</th>
+                <th id="item-img">상품 이미지</th>
+                <th id="item-content">상품명</th>
+                <th id="item-price">가격</th>
+            </tr>
+
+
+            <tr style="border: 1px solid black" class="product" th:each="product, productStat : ${wishList}">
+                <td class="item-no" th:text="${productStat.count}">1</td>
+                <input type="hidden" class="productNo" th:value="${product.no}">
+                <td><a th:href="@{|/product/${product.no}|}"><img th:src="${product.mainImg}" alt="상품 메인 이미지"></a></td>
+                <td class="item-content">
+                    <a th:href="@{|/product/${product.no}|}"><h3 class="item-title" th:text="${product.title}">제목</h3></a> <br>
+<!--                    <p class="item-body">상품설며어어ㅇㅈㅂㅇㅂㅈㅇㅈㅂㅇㅂㅈㅇㅂ엉어어어</p>-->
+                </td>
+                <td class="item-price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + 원"> 10000</td>
+                <td class="item-remove"><i class="fa-solid fa-x"></i></td>
+            </tr>
+        </table>
+    </main>
+</body>
+</html>
+
+<script>
+    const products = document.querySelectorAll('.product');
+    const csrfToken = document.querySelector('meta[name=_csrf]').content;
+
+
+    [...products].forEach((product) => {
+        const deleteBtn = product.querySelector('.fa-x');
+        const productNo = product.querySelector('.productNo');
+        deleteBtn.onclick = () => {
+            console.log(productNo.value)
+            if(confirm('진짜 찜목록에서 삭제하실래요?')) {
+                fetch(`/user/wish-list`, {
+                    method: 'DELETE',
+                    headers: {"Content-Type":"application/json","X-Csrf-Token": csrfToken},
+                    body: JSON.stringify(productNo.value)
+                }).then(resp => {
+                    if(resp.ok) {
+                        location.reload();
+                    }
+                }).catch(e => {
+                    alert('에러남: '+e);
+                })
+            }
+        }
+    })
+</script>

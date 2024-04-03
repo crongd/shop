@@ -205,7 +205,7 @@
                         </tr>
 
                         <tr class="product" style="border: 1px solid black" th:each="cart : ${products}">
-                            <td class="item-check"><label><input class="check" type="checkbox" th:value="${cart.product.price}"></label></td>
+                            <td class="item-check"><label><input class="check" type="checkbox" checked th:value="${cart.product.price}"></label></td>
                             <input type="hidden" class="cart-no" th:name="no" th:value="${cart.no}">
                             <td><a th:href="@{|/product/${cart.product.no}|}"><img th:src="${cart.product.mainImg}" th:alt="메인사진"></a></td>
                             <td class="item-content">
@@ -233,9 +233,9 @@
                 <!--            <div th:text="${products.}"></div>-->
                 <div class="buy-container">
                     <div class="buy-content"><span>상품금액</span><span id="price" th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]), 0, 'COMMA')} + '원'">1450</span></div>
-                    <div class="buy-content"><span>배 송 비 </span><span>+ 3000원</span></div>
+                    <div class="buy-content"><span>배 송 비 </span><span>+ 0원</span></div>
                     <hr style="margin: 30px 0">
-                    <div class="buy-content"><span>결제 예정 금액 </span><span th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]) + 3000, 0, 'COMMA')} + '원'">123</span></div>
+                    <div class="buy-content"><span>결제 예정 금액 </span><span id="total-price" th:text="${#numbers.formatInteger(#aggregates.sum(products.![product.price * amount]), 0, 'COMMA')} + '원'">123</span></div>
                 </div>
                 <button class="buy-bth" id="order-btn">구매하기</button>
             </section>
@@ -250,9 +250,17 @@
     const products = document.querySelectorAll('.product');
     const csrfToken = document.querySelector('meta[name=_csrf]').content;
     const orderBtn = document.querySelector('#order-btn');
+    const checkElement = document.querySelectorAll('.check');
+
+
     console.log(csrfToken);
 
     orderBtn.onclick = () => {
+        const checkedElements = Array.from(checkElement).filter(element => element.checked);
+        if (checkedElements.length === 0) {
+            alert('1개 이상의 상품을 선택해 주세요');
+            return;
+        }
         const form = get_order_products(false);
         document.body.appendChild(form);
         form.action = '/order';
@@ -305,6 +313,33 @@
         // console.log(mBtn, pBtn)
         const count = product.querySelector('input[type=number]');
         const x = product.querySelector('.x');
+        const checkbox = product.querySelector('.check');
+        checkbox.onchange = () => {
+            const totalPriceTag = document.querySelector('#total-price');
+            const totalPrice = totalPriceTag.innerText.replace(',', '').replace('원', '');
+            const productPrice = document.querySelector('#price');
+            const price = product.querySelector('.item-price > div').innerText.replace(',', '').replace('원', '');
+            const amount = product.querySelector('.amount').value;
+            console.log(price);
+            console.log(amount);
+            let priceNum = productPrice.innerText.replace(',', '').replace('원', '');
+            console.log(priceNum);
+
+            if(checkbox.checked) {
+                let a = parseInt(priceNum) + parseInt(price * amount);
+                let b = parseInt(totalPrice) + parseInt(price * amount);
+                // console.log("a : " + a);
+                productPrice.innerText = numberFormat(a);
+                totalPriceTag.innerText = numberFormat(b);
+            } else {
+                let a = parseInt(priceNum) - parseInt(price * amount);
+                let b = parseInt(totalPrice) - parseInt(price * amount);
+                productPrice.innerText = numberFormat(a);
+                totalPriceTag.innerText = numberFormat(b);
+            }
+
+            // console.log(product);
+        }
 
         mBtn.onclick = () => {
             if (parseInt(count.value) > 1) {
@@ -323,11 +358,17 @@
         }
 
         x.onclick = () => {
-            delete_product(shoppingCartNo.value);
+            if (confirm('진짜 장바구니에서 삭제 할까요?')) {
+                delete_product(shoppingCartNo.value);
+            }
         }
 
 
     })
+
+    function numberFormat(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+    }
 
     function change_product_amount(shoppingCartNo, amount) {
         fetch(`/user/cart`, {

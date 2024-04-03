@@ -4,10 +4,7 @@ import com.shop.dto.product.ProductDTO;
 import com.shop.dto.shopping.OrderDTO;
 import com.shop.dto.shopping.ShoppingCartDTO;
 import com.shop.dto.user.UserDTO;
-import com.shop.mappers.OrderMapper;
-import com.shop.mappers.ProductMapper;
-import com.shop.mappers.ShoppingCartMapper;
-import com.shop.mappers.UserMapper;
+import com.shop.mappers.*;
 import com.shop.service.OrderService;
 import com.shop.service.PortOneService;
 import org.junit.jupiter.api.Test;
@@ -42,6 +39,9 @@ class ShoppingMallApplicationTests {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private WishListMapper wishListMapper;
+
 //    static Map<String, String> getUser() {
 //        List<Map<String, Object>> result =
 //    }
@@ -49,19 +49,21 @@ class ShoppingMallApplicationTests {
     @Test
     void contextLoads() {
 
+        System.out.println(productMapper.get_product_by_no(1228));
+//        System.out.println(wishListMapper.wish_list_get(UserDTO.builder().id("jaeho9859").build()));
 //        ProductDTO aa = productMapper.get_product_by_no(500);
 
 
 //        System.out.println(orderMapper.test());
 
-        List<Map<String, String>> results = orderMapper.test();
-        System.out.println("reslts" + results);
-        Map<String, String> resultMap = new HashMap<>();
-        for(Map<String, String> value : results) {
-            resultMap.put(value.get("id"), value.get("password"));
-        }
-
-        System.out.println("resultMap" + resultMap);
+//        List<Map<String, String>> results = orderMapper.test();
+//        System.out.println("reslts" + results);
+//        Map<String, String> resultMap = new HashMap<>();
+//        for(Map<String, String> value : results) {
+//            resultMap.put(value.get("id"), value.get("password"));
+//        }
+//
+//        System.out.println("resultMap" + resultMap);
 
 //        System.out.println(productMapper.get_product_by_category(7, "price"));
 //
