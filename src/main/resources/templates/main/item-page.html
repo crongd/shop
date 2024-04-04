@@ -259,7 +259,9 @@
             </div>
             <div class="review">
                 <div>사용자 평점</div>
-                <div><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <div>
+                    <i class="fa-solid fa-star"></i>
+                </div>
                 <div>
                     <span th:if="${product.reviews.size() != 0}" th:text="${product.reviews[0].averageRate}">3</span>
                     <span th:if="${product.reviews.size() == 0}">0</span>
@@ -272,17 +274,15 @@
         </div>
         <hr>
         <div>
-            <ul class="review-list">
+            <ul class="review-list" th:each="review : ${product.reviews}">
                 <li class="review-list-li">
                     <div class="review-content-container">
                         <div class="review-content">
                             <div>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star" th:each="num : ${#numbers.sequence(1, review.rate)}"></i>
                             </div>
-                            <div><span>username</span> <span>23-12-19 15:21:10</span></div>
-                            <p>고구마가 어엄청 맛있어요.</p>
+                            <div><span th:text="${review.userId}">username</span> <span th:text="${review.writeDate}">23-12-19 15:21:10</span></div>
+                            <p th:text="${review.content}">고구마가 어엄청 맛있어요.</p>
                             <!--여긴 그냥 두고 작성에서 max를 걸어야 할 듯-->
                         </div>
 
@@ -294,28 +294,6 @@
                         </div>
                     </div>
                 </li>
-                <li class="review-list-li">
-                    <div class="review-content-container">
-                        <div class="review-content">
-                            <div>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                            </div>
-                            <div><span>username</span> <span>23-12-19 15:21:10</span></div>
-                            <p>고구마가 어엄청 맛있어요.</p>
-                            <!--여긴 그냥 두고 작성에서 max를 걸어야 할 듯-->
-                        </div>
-
-                        <div class="review-like">
-                            <button class="like-btn">
-                                <i class="fa-regular fa-thumbs-up"></i>
-                                <span>10</span>
-                            </button>
-                        </div>
-                    </div>
-                </li>
-
             </ul>
         </div>
     </section>

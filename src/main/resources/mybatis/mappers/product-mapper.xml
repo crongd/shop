@@ -32,12 +32,25 @@
     </resultMap>
 
     <select id="get_product_by_no" resultMap="product_result_map" >
-        select *,
+        select
         p.no as product_no,
+        p.title,
+        p.price,
+        p.main_img,
+
         pi.no as image_no,
+        pi.product_img,
+
         po.no as option_no,
+        po.name,
+        po.additional_price,
+
         r.no as review_no,
-        (select avg(rate) from review where product_no = #{no}) as averageRate
+        r.user_id,
+        r.content,
+        r.rate,
+        r.write_date,
+        Round((select avg(rate) from review where product_no = #{no}), 1) as averageRate
         from product p
         left outer join product_img pi
         on p.no = pi.product_no
