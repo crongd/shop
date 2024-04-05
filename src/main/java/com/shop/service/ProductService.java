@@ -2,6 +2,8 @@ package com.shop.service;
 
 import com.shop.dto.product.Category;
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.product.ReviewDTO;
+import com.shop.dto.user.UserDTO;
 import com.shop.mappers.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,15 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     public ProductDTO get_product(int no) {
-        return productMapper.get_product_by_no(no);
+        ProductDTO product = productMapper.get_product_by_no(no);
+
+        product.getReviews().forEach(review -> {
+            String date = review.getWriteDate().toString();
+            String formatDate = date.replace('T', ' ');
+            review.setFormatWriteDate(formatDate);
+        });
+
+        return product;
 //        return null;
     }
 
@@ -36,6 +46,10 @@ public class ProductService {
 
     public List<Category> get_category_of_product(Category category) {
         return productMapper.get_category_of_product(category);
+    }
+
+    public void add_review_like(UserDTO userDTO, int reviewNo) {
+        productMapper.review_like_add(userDTO.getId(), reviewNo);
     }
 
 

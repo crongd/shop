@@ -168,9 +168,30 @@
         font-size: 15px;
     }
 
+
     .like-btn:hover {
         background-color: darkgray;
     }
+
+    .clicked-like-btn {
+        width: 60px;
+        height: 30px;
+        border: 1px solid black;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 15px;
+        background-color: darkgray;
+    }
+
+    /*.clicked-like-btn:disabled {*/
+    /*    width: 60px;*/
+    /*    height: 30px;*/
+    /*    border: 1px solid black;*/
+    /*    border-radius: 10px;*/
+    /*    font-weight: bold;*/
+    /*    font-size: 15px;*/
+    /*    background-color: darkgray;*/
+    /*}*/
 
     .review-list-li {
         margin: 10px 0 0;
@@ -204,7 +225,7 @@
             <img class="item-img" th:src="${product.mainImg}" alt="main-image"/>
             <div class="item-content">
                 <h3 th:text="${product.title}">제에모옥~~~</h3>
-                <div class="item-price"> &#8361; <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')}">15,000</span></div>
+                <div class="item-price"> <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')}">15,000</span></div>
                 <hr>
                 <div class="control">
                     <h3 th:if="${product.productOptions.size() != 0}">옵션</h3>
@@ -275,21 +296,24 @@
         <hr>
         <div>
             <ul class="review-list" th:each="review : ${product.reviews}">
-                <li class="review-list-li">
+                <li class="review-list-li" th:class="${review.users.contains(#authentication.name)} ? 'review-list-li' : 'review-list-li click-review'">
                     <div class="review-content-container">
                         <div class="review-content">
+                            <input type="hidden" class="reviewNo" th:value="${review.no}">
                             <div>
                                 <i class="fa-solid fa-star" th:each="num : ${#numbers.sequence(1, review.rate)}"></i>
                             </div>
-                            <div><span th:text="${review.userId}">username</span> <span th:text="${review.writeDate}">23-12-19 15:21:10</span></div>
+                            <div><span th:text="${review.userId}">username</span> <span th:text="${review.formatWriteDate}">23-12-19 15:21:10</span></div>
                             <p th:text="${review.content}">고구마가 어엄청 맛있어요.</p>
                             <!--여긴 그냥 두고 작성에서 max를 걸어야 할 듯-->
                         </div>
 
                         <div class="review-like">
-                            <button class="like-btn">
+                            <!--내가 버튼을 눌렀는지-->
+                            <!--이미 눌렀을 때-->
+                            <button th:class="${review.users.contains(#authentication.name)} ? 'clicked-like-btn' : 'like-btn'">
                                 <i class="fa-regular fa-thumbs-up"></i>
-                                <span>10</span>
+                                <span th:text="${review.users.size()}">10</span>
                             </button>
                         </div>
                     </div>
@@ -303,7 +327,7 @@
 </body>
 </html>
 
-<script>
+<script defer>
     // 상단 이동 스크롤 버튼 js
     const topBtn = document.querySelector('.top-btn');
     const wishBtn = document.querySelector('#wish-btn');
@@ -314,6 +338,32 @@
     let productOption ;
     const csrf = document.querySelector('#csrf');
     // const optionName = productOption.querySelector('option').selected;
+    const reviewList = document.querySelectorAll('.click-review');
+    console.log(reviewList.length);
+
+    [...reviewList].forEach(review => {
+        const likeBtn = review.querySelector('.like-btn');
+        const likeCount = review.querySelector('.like-btn span');
+        const reviewNo = review.querySelector('.reviewNo');
+        console.log(reviewNo.value)
+        console.log(likeCount)
+        console.log(likeBtn);
+
+
+        likeBtn.onclick = () => {
+            fetch('/product/review-like',{
+                method: 'PATCH',
+                headers: {"Content-Type":"application/json","X-Csrf-Token": csrf.value},
+                body: JSON.stringify(reviewNo.value)
+            })
+
+            likeCount.innerText = parseInt(likeCount.innerText) + 1;
+            likeBtn.disabled = true;
+            likeBtn.className = 'clicked-like-btn';
+
+
+        }
+    })
 
     window.onscroll = () => {
         if (scrollY < 300) {

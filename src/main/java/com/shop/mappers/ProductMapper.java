@@ -26,6 +26,9 @@ public interface ProductMapper {
 
     List<Category> get_category_of_product(Category category);
 
+    void review_like_add(@Param("id") String id, @Param("reviewNo") int reviewNo);
+
+
     /** */
 //    // 카테고리 대분류 값 가져오기
 //    List<Category> get_categories();

@@ -1,8 +1,11 @@
 package com.shop.dto.product;
 
+import com.shop.dto.user.UserDTO;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,5 +20,7 @@ public class ReviewDTO {
     private String content;
     private int rate;
     private LocalDateTime writeDate;
+    private String formatWriteDate;
+    private List<String> users;
     private double averageRate;
 }

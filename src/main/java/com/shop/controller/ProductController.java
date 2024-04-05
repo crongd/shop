@@ -2,8 +2,10 @@ package com.shop.controller;
 
 import com.shop.dto.product.Category;
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.user.UserDTO;
 import com.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +74,14 @@ public class ProductController {
     @ResponseBody
     public List<Category> get_product_category(@PathVariable("cateNo") int cateNo) {
         return productService.get_categories(cateNo);
+    }
+
+    @PatchMapping("/review-like")
+    @ResponseBody
+    public void Patch_review_like(@AuthenticationPrincipal UserDTO userDTO,@RequestBody int reviewNo) {
+        System.out.println(userDTO);
+        System.out.println(reviewNo);
+        productService.add_review_like(userDTO, reviewNo);
     }
 
 }

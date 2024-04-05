@@ -23,10 +23,13 @@
         </collection>
 
         <collection property="reviews" ofType="com.shop.dto.product.ReviewDTO" javaType="list" autoMapping="true">
-            <id property="no" column="review_no" />
+            <id property="userId" column="r_user_id" />
+            <id property="productNo" column="r_product_no" />
+            <result property="no" column="r_no" />
             <result property="averageRate" column="averageRate" />
-            <result property="productNo" column="" />
-            <result property="writeDate" column="" />
+            <collection property="users" ofType="string" javaType="list">
+                <result column="rl_user" />
+            </collection>
         </collection>
 
     </resultMap>
@@ -45,12 +48,17 @@
         po.name,
         po.additional_price,
 
-        r.no as review_no,
-        r.user_id,
+        r.no as r_no,
+        r.user_id as r_user_id,
+        r.product_no as r_product_no,
         r.content,
         r.rate,
         r.write_date,
+
+        rl.user_id as rl_user,
+
         Round((select avg(rate) from review where product_no = #{no}), 1) as averageRate
+
         from product p
         left outer join product_img pi
         on p.no = pi.product_no
@@ -58,8 +66,10 @@
         on p.no = po.product_no
         left outer join review r
         on p.no = r.product_no
+        left outer join review_like rl
+        on r.no = rl.review_no
         where p.no = #{no}
-        order by pi.no;
+        order by pi.no
     </select>
 
     <select id="all_products" resultMap="product_result_map" >
@@ -173,7 +183,9 @@
     </select>
 
 
-
+    <insert id="review_like_add">
+        insert into review_like values(#{id}, #{reviewNo})
+    </insert>
 
 
 

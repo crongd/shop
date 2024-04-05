@@ -49,7 +49,7 @@ class ShoppingMallApplicationTests {
     @Test
     void contextLoads() {
 
-        System.out.println(productMapper.get_product_by_no(1228));
+        System.out.println(productMapper.get_product_by_no(379));
 //        System.out.println(wishListMapper.wish_list_get(UserDTO.builder().id("jaeho9859").build()));
 //        ProductDTO aa = productMapper.get_product_by_no(500);
 
