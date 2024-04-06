@@ -227,10 +227,11 @@ public class UserController {
 
     @GetMapping("/mypage/detail/{merchantUid}")
     @ResponseBody
-    public List<ShoppingCartDTO> get_detail_data(
+    public List<ProductDTO> get_detail_data(
             @AuthenticationPrincipal UserDTO userDTO,
             @PathVariable("merchantUid") String merchantUid
     ) {
+        System.out.println(userService.get_my_page_detail_data(userDTO, merchantUid));
         return userService.get_my_page_detail_data(userDTO, merchantUid);
     }
 

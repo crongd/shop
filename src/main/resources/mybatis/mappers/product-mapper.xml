@@ -188,6 +188,10 @@
     </insert>
 
 
+    <insert id="review_write" parameterType="com.shop.dto.product.ReviewDTO">
+        insert into review(user_id, product_no, content, rate)
+        values(#{userId}, #{productNo}, #{content}, #{rate})
+    </insert>
 
 
 </mapper>

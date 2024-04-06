@@ -99,7 +99,7 @@ public class UserService {
 
 
 
-    public List<ShoppingCartDTO> get_my_page_detail_data(UserDTO userDTO, String orderId) {
+    public List<ProductDTO> get_my_page_detail_data(UserDTO userDTO, String orderId) {
         return shoppingCartMapper.get_my_page_detail_data(userDTO, orderId);
     }
 

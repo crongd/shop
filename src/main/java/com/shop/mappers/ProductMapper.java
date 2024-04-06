@@ -2,6 +2,7 @@ package com.shop.mappers;
 
 import com.shop.dto.product.Category;
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.product.ReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -27,6 +28,8 @@ public interface ProductMapper {
     List<Category> get_category_of_product(Category category);
 
     void review_like_add(@Param("id") String id, @Param("reviewNo") int reviewNo);
+
+    void review_write(ReviewDTO reviewDTO);
 
 
     /** */

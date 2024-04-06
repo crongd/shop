@@ -22,6 +22,7 @@ public class ProductDTO {
     private String mainImg;
     private LocalDateTime writeDate;
     private Category category;
+    private int amount;
 
     private List<ImageFileDTO> productImages;
     private List<ProductOptionDTO> productOptions;

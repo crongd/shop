@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta th:name="${_csrf.parameterName}" th:content="${_csrf.token}">
     <meta charset="UTF-8">
     <title>마이 페이지</title>
     <script src="https://kit.fontawesome.com/d19fdaba43.js" crossorigin="anonymous"></script>
@@ -9,6 +10,9 @@
 <body>
 
 <div class="my-info-container">
+    <a href="/">
+        <div id="logo"></div>
+    </a>
     <section class="my-info-section">
 <!--        th:style='|background-image: url(${user.imageFile})|'-->
         <div id="my-icon"></div>
@@ -33,7 +37,7 @@
         <section class="my-order-section">
             <div class="my-order-status-container">
                 <div class="my-order-status">
-                    <span>0</span>
+                    <span th:text="${orders.size()}">0</span>
                     <span>결제완료</span>
                 </div>
                 <div class="my-order-status">
@@ -86,10 +90,10 @@
     </div>
 </main>
 
+<!--상세 정보 모달-->
 <div class="order-detail-container">
     <button id="order-detail-close-btn"><i class="fa-solid fa-xmark"></i></button>
     <section class="order-detail-product-section">
-
         <table>
            <caption>주문상품</caption>
             <thead>
@@ -111,23 +115,104 @@
 </div>
 
 
+<div class="product-review-container">
+    <button id="product-review-close-btn"><i class="fa-solid fa-xmark"></i></button>
+    <section class="product-review-section">
+        <select class="product-select" name="" id="">
+        </select>
+        <br>
+        <div class="star-rating">
+            <input type="radio" class="star" value="1">
+            <input type="radio" class="star" value="2">
+            <input type="radio" class="star" value="3">
+            <input type="radio" class="star" value="4">
+            <input type="radio" class="star" value="5">
+        </div>
+        <br>
+
+        <textarea class="review-textarea" style="resize: none" cols="50" rows="10"></textarea>
+
+        <br>
+        <button class="review-submit-btn">작성완료</button>
+    </section>
+</div>
+
 
 </body>
 
 <script>
+    const csrfToken = document.querySelector('meta[name=_csrf]').content;
+
     const orderList = document.querySelectorAll('.order-list');
     const detailContainer = document.querySelector('.order-detail-container');
     const detailSection = document.querySelector('.order-detail-product-section');
     const detailContainerBtn = document.querySelector('#order-detail-close-btn');
+
+    const reviewContainer = document.querySelector('.product-review-container');
+    const reviewCloseBtn = document.querySelector('#product-review-close-btn')
+    const reviewSubmitBtn = document.querySelector('.review-submit-btn');
+    const productSelect = document.querySelector('.product-select');
+    const reviewRate = document.querySelectorAll('.star');
+
+    console.log(reviewRate);
+
+    let rate;
+
+    [...reviewRate].forEach(star => {
+        star.onclick = () => {
+            rate = star.value;
+        }
+    });
+
+    reviewCloseBtn.onclick = () => {
+        reviewContainer.style.display = 'none';
+    }
+
+    reviewSubmitBtn.onclick = () => {
+        const selectedProductNo = productSelect.options[productSelect.selectedIndex].value;
+        const reviewTextarea = document.querySelector('.review-textarea');
+
+        let data = {
+            productNo : selectedProductNo,
+            content : reviewTextarea.value,
+            rate : rate
+        }
+
+        console.log(data);
+
+        fetch('/product/review-write', {
+            method: 'POST',
+            headers: {"X-Csrf-Token": csrfToken, 'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        }).then(resp => {
+            if (resp.ok) {
+                alert('리뷰 달았음');
+            } else {
+                alert('일시적으로 에러가 뜸');
+            }
+        }).catch(e => {
+            alert('일시적으로 에러가 뜸' + e);
+        })
+    }
+
+
+
+
+
+
+
 
     detailContainerBtn.onclick = () => {
         detailContainer.style.display = 'none';
     }
 
 
+    // 상세정보 띄우기
     [...orderList].forEach(product => {
         const detailBtn = product.querySelector('.order-detail-btn');
         const merchantUid = product.querySelector('.order-merchantUid').innerText;
+        const reviewWriteBtn = product.querySelector('.order-review-btn');
+
         console.log(merchantUid)
 
 
@@ -163,21 +248,21 @@
                     let no = 1;
                     for (product of value) {
                         let options = '';
-                        if(product.product.productOptions[0].name != null){
-                            options = `<div class="sub-title">옵션 : ${product.product.productOptions[0].name}</div>`;
+                        if(product.productOptions[0].name != null){
+                            options = `<div class="sub-title">옵션 : ${product.productOptions[0].name}</div>`;
                         }
                         body.insertAdjacentHTML('beforeend', `<tr>
                         <td class="product-no">${no}</td>
                         <td class="product-img">
-                            <img src="${product.product.mainImg}" alt="대표 이미지">
+                            <img src="${product.mainImg}" alt="대표 이미지">
                         </td>
                         <td class="product-summary">
-                            <div class="title">${product.product.title}</div>
+                            <div class="title">${product.title}</div>
                             ${options}
                         </td>
-                        <td class="product-price">${product.product.price.toLocaleString('ko-KR')+ '원'}</td>
+                        <td class="product-price">${product.price.toLocaleString('ko-KR')+ '원'}</td>
                         <td class="product-amount">${product.amount}</td>
-                        <td class="total-price">${(product.product.price * product.amount).toLocaleString('ko-KR') + '원'}</td>
+                        <td class="total-price">${(product.price * product.amount).toLocaleString('ko-KR') + '원'}</td>
                     </tr>`)
 
                         no++;
@@ -187,13 +272,31 @@
 
                 })
         }
+
+        reviewWriteBtn.onclick = () => {
+
+            fetch(`/user/mypage/detail/${merchantUid}`)
+                .then(resp => {
+                    if (resp.ok) {
+                        return resp.json()
+                    } else {
+                        alert('요청이 이상함')
+                    }
+                }).then(value => {
+                for (product of value) {
+                    productSelect.insertAdjacentHTML('beforeend', `
+                        <option value="${product.no}">${product.title}</option>
+                        `)
+                }
+            })
+
+
+            reviewContainer.style.display = 'block';
+
+        }
     })
 
 </script>
-
-
-
-
 
 
 
@@ -204,9 +307,10 @@
     }
 
     .my-info-container{
+        display: flex;
         background-image: linear-gradient(to right, #fc3d40, #fc6d5b 80%);
         /*background-color: black;*/
-        padding: 20px 100px;
+        padding: 20px 20px;
         font-size: var(--text-large-size);
         color: white;
     }
@@ -224,6 +328,7 @@
         background-size: cover;
         margin-right: 20px;
     }
+
     .my-info span{
         display: block;
         font-weight: bold;
@@ -514,6 +619,105 @@
         font-weight: bold;
         font-size: var(--text-medium-size);
         width: 12%;
+    }
+
+    /*********************************************/
+
+    .star-rating {
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+    }
+
+    .star {
+        appearance: none;
+        padding: 1px;
+    }
+
+    .star::after {
+        content: '☆';
+        color: hsl(60, 80%, 45%);
+        font-size: 30px;
+    }
+
+    .star:hover::after,
+    .star:has(~ .star:hover)::after,
+    .star:checked::after,
+    .star:has(~ .star:checked)::after {
+        content: '★';
+    }
+
+
+    .star:hover ~ .star::after {
+        content: '☆';
+    }
+
+
+    /*********************************************/
+    .product-review-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        padding: 40px 0;
+        background-color: rgba(0,0,0,0.3);
+        z-index: 99;
+        text-align: center;
+    }
+
+    #product-review-close-btn {
+        position: absolute;
+        font-size: var(--text-large-size);
+        top: 2%;
+        right: 4%;
+        color: red;
+        width: 40px;
+        height: 40px;
+        border: 1px solid white;
+        border-radius: 50%;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .product-review-section {
+        border: 0 solid white;
+        border-radius: 20px;
+        width: 500px;
+        height: 400px;
+        background-color: white;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .product-select {
+        font-size: 20px;
+        width: 100%;
+    }
+
+    .review-submit-btn {
+        padding: 6px 13px;
+        border: none;
+        border-radius: 5px;
+        font-size: var(--text-medium-size);
+        align-self: start;
+        justify-self: start;
+        cursor: pointer;
+        margin: 20px;
+    }
+
+    #logo {
+        display: inline-block;
+        /*box-sizing: border-box;*/
+        width: 200px;
+        height: 80px;
+        /*border: 1px solid black;*/
+        background-image: url("https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDNfMTAg/MDAxNTgwNzEwMzY5MjM0.hlBG7FOVi0fIA6WURszqg0T_eK3hun4H9uv2iByqpPUg.br7UJh8oWuzJ6ToXXwMaZQ7wWVezvCYUq1nUwWKPuXkg.PNG.louders33/1_04.png?type=w800");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /*margin: 5px 10px;*/
+        margin: 10px 0;
     }
 </style>
 </html>

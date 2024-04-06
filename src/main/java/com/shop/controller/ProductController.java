@@ -2,6 +2,7 @@ package com.shop.controller;
 
 import com.shop.dto.product.Category;
 import com.shop.dto.product.ProductDTO;
+import com.shop.dto.product.ReviewDTO;
 import com.shop.dto.user.UserDTO;
 import com.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,12 @@ public class ProductController {
     @ResponseBody
     public List<Category> get_product_category(@PathVariable("cateNo") int cateNo) {
         return productService.get_categories(cateNo);
+    }
+
+    @PostMapping("/review-write")
+    @ResponseBody
+    public void review_write(@AuthenticationPrincipal UserDTO userDTO, @RequestBody ReviewDTO reviewDTO) {
+        productService.review_write(userDTO, reviewDTO);
     }
 
     @PatchMapping("/review-like")

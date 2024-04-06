@@ -52,6 +52,10 @@ public class ProductService {
         productMapper.review_like_add(userDTO.getId(), reviewNo);
     }
 
+    public void review_write(UserDTO userDTO, ReviewDTO reviewDTO) {
+        reviewDTO.setUserId(userDTO.getId());
+        productMapper.review_write(reviewDTO);
+    }
 
 //    private String asdasf(String order) {
 //        return switch () {

@@ -26,5 +26,5 @@ public interface ShoppingCartMapper {
 
     List<ShoppingCartDTO> select_cart_list_by_cartNo(List<Integer> cartNo);
 
-    List<ShoppingCartDTO> get_my_page_detail_data(@Param("user") UserDTO userDTO,@Param("orderId") String orderId);
+    List<ProductDTO> get_my_page_detail_data(@Param("user") UserDTO userDTO,@Param("orderId") String orderId);
 }

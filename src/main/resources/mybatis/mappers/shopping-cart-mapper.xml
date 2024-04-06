@@ -138,15 +138,17 @@
     </select>
 
 
-    <resultMap id="my_page_detail_resultMap" type="com.shop.dto.shopping.ShoppingCartDTO">
-        <result property="amount" column="order_amount" javaType="int" />
-        <association property="product" javaType="com.shop.dto.product.ProductDTO" autoMapping="true">
+    <resultMap id="my_page_detail_resultMap" type="com.shop.dto.product.ProductDTO" autoMapping="true">
+        <id property="no" column="p_no" />
+
+        <result property="amount" column="order_amount" />
+
+        <collection property="productOptions" ofType="com.shop.dto.product.ProductOptionDTO" javaType="list" autoMapping="true">
             <id property="no" column="p_no" />
-            <collection property="productOptions" javaType="list" ofType="com.shop.dto.product.ProductOptionDTO" autoMapping="true">
-                <id property="no" column="po.no" />
-                <result property="name" column="option_name" />
-            </collection>
-        </association>
+            <result property="name" column="option_name"/>
+        </collection>
+
+
     </resultMap>
 
 
@@ -164,9 +166,9 @@
         on op.product_no=p.no
         left outer join product_option po
         on op.product_option=po.no
-        <where>
-            o.order_id=#{orderId} and o.user_id=#{user.id}
-        </where>
+
+        where o.order_id=#{orderId} and o.user_id=#{user.id}
+
     </select>
 
 
