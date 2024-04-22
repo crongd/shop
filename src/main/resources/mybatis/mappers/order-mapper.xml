@@ -72,9 +72,8 @@
         from `order` o
         left outer join `order_product` op
         on o.order_id=op.order_id
-        <where>
-            o.user_id=#{id}
-        </where>
+
+        where o.user_id= #{id}
     </select>
 
 

@@ -49,7 +49,8 @@ class ShoppingMallApplicationTests {
     @Test
     void contextLoads() {
 
-        System.out.println(shoppingCartMapper.get_my_page_detail_data(UserDTO.builder().id("jaeho9859").build(), "3a57c46a-6f0b-4be7-8189-55312149d2e2"));
+//        System.out.println(shoppingCartMapper.get_my_page_detail_data(UserDTO.builder().id("jaeho9859").build(), "3a57c46a-6f0b-4be7-8189-55312149d2e2"));
+        System.out.println(orderMapper.get_orders(UserDTO.builder().id("jaeho9859").build()));
 //        System.out.println(wishListMapper.wish_list_get(UserDTO.builder().id("jaeho9859").build()));
 //        ProductDTO aa = productMapper.get_product_by_no(500);
 

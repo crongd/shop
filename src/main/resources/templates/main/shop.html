@@ -504,7 +504,7 @@
                     productList.insertAdjacentHTML('beforeend',
                         `<li class="goods">
                     <a href="/product/${product['no']}" class="goods-link">
-                        <img src="${product['mainImg']}" alt="mainImage" class="image">
+                        <img th:src="${product['mainImg']}" alt="mainImage" class="image">
                         <div>
                             <div class="product-title">${product['title']}</div>
                             <div style="margin: 10px 0">

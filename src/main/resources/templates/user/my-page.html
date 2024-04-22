@@ -71,7 +71,7 @@
 
                     <div class="order-summary">
                         <div class="order-major-img">
-                            <img th:src="${order.shoppingCarts[order.shoppingCarts.size()-1].product.mainImg}" alt="">
+                            <img th:src="${order.shoppingCarts[order.shoppingCarts.size() - 1].product.mainImg }" alt="">
                         </div>
                         <div class="order-info">
                             <span class="order-title" th:text="${order.name}">주문 title</span>
@@ -187,6 +187,7 @@
         }).then(resp => {
             if (resp.ok) {
                 alert('리뷰 달았음');
+                reviewContainer.style.display = 'none';
             } else {
                 alert('일시적으로 에러가 뜸');
             }
@@ -283,6 +284,7 @@
                         alert('요청이 이상함')
                     }
                 }).then(value => {
+                    productSelect.innerHTML = '';
                 for (product of value) {
                     productSelect.insertAdjacentHTML('beforeend', `
                         <option value="${product.no}">${product.title}</option>
